@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hGy-bx-aVN">
+                                <rect key="frame" x="50" y="40" width="275" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="VeL-ns-51L"/>
+                                </constraints>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zW0-FD-BsV">
+                                <rect key="frame" x="156" y="92" width="62" height="30"/>
+                                <state key="normal" title="开始下载"/>
+                                <connections>
+                                    <action selector="startAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Pf-rj-sZI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lNs-Op-yO4">
+                                <rect key="frame" x="156" y="172" width="62" height="30"/>
+                                <state key="normal" title="暂停下载"/>
+                                <connections>
+                                    <action selector="suspendAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="F1G-Pu-CTO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrA-iT-HJP">
+                                <rect key="frame" x="156" y="252" width="62" height="30"/>
+                                <state key="normal" title="取消下载"/>
+                                <connections>
+                                    <action selector="cancelAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wF0-Oq-OLK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBf-5M-XTb">
+                                <rect key="frame" x="156" y="332" width="62" height="30"/>
+                                <state key="normal" title="继续下载"/>
+                                <connections>
+                                    <action selector="goOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l9I-T4-Gz4"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="zW0-FD-BsV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1Jm-Vc-fMf"/>
+                            <constraint firstItem="NBf-5M-XTb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AfC-Vi-syO"/>
+                            <constraint firstItem="nrA-iT-HJP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MOV-Wn-l2X"/>
+                            <constraint firstItem="zW0-FD-BsV" firstAttribute="top" secondItem="hGy-bx-aVN" secondAttribute="bottom" constant="50" id="RwJ-Oz-4wX"/>
+                            <constraint firstItem="hGy-bx-aVN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="ajp-Mf-d5V"/>
+                            <constraint firstItem="nrA-iT-HJP" firstAttribute="top" secondItem="lNs-Op-yO4" secondAttribute="bottom" constant="50" id="bsI-hR-sUw"/>
+                            <constraint firstAttribute="trailing" secondItem="hGy-bx-aVN" secondAttribute="trailing" constant="50" id="dYC-r4-F7A"/>
+                            <constraint firstItem="lNs-Op-yO4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gxT-dD-vIK"/>
+                            <constraint firstItem="hGy-bx-aVN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="50" id="iCI-TP-gtG"/>
+                            <constraint firstItem="NBf-5M-XTb" firstAttribute="top" secondItem="nrA-iT-HJP" secondAttribute="bottom" constant="50" id="uTb-b7-ynV"/>
+                            <constraint firstItem="lNs-Op-yO4" firstAttribute="top" secondItem="zW0-FD-BsV" secondAttribute="bottom" constant="50" id="wdE-ty-t7A"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="progressView" destination="hGy-bx-aVN" id="f7V-JG-NKA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

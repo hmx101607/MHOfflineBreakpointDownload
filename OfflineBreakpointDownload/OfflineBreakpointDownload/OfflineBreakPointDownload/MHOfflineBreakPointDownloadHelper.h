@@ -24,9 +24,6 @@ typedef void(^completionBlock) (NSError *error);
 
 @interface MHOfflineBreakPointDownloadHelper : NSObject
 
-/** 下载资源路径 */
-@property (strong, nonatomic) NSString *sourceUrl; //必须为NSUrl
-
 @property (weak, nonatomic) id<MHOfflineBreakPointDownloadHelperDelegate>delegate;
 
 + (instancetype)shareDownloadInstance;
@@ -42,7 +39,7 @@ typedef void(^completionBlock) (NSError *error);
                completionBlock:(completionBlock)completionBlock;
 
 /** 取消下载 */
-- (void)cancelDownLoad;
+- (void)cancelDownLoadWithUrl:(NSString *)url;
 
 /** 继续下载 */
 - (void)goOnDownLoadWithUrl:(NSString *)url

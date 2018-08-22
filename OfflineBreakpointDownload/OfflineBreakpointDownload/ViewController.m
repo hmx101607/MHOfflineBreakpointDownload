@@ -39,7 +39,6 @@ typedef struct MYStruct {
 //    } completionBlock:^(NSError *error) {
 //        
 //    }];
-    [MHOfflineBreakPointDownloadHelper shareDownloadInstance].sourceUrl = kFileUrl;
     [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] startDownLoadWithUrl:kFileUrl progressBlock:^(CGFloat currentSize, CGFloat totalSize) {
         CGFloat progress = currentSize / totalSize;
         self.progressView.progress = progress;
@@ -61,7 +60,7 @@ typedef struct MYStruct {
 }
 
 - (IBAction)cancelAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] cancelDownLoad];
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] cancelDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)goOnAction:(id)sender {

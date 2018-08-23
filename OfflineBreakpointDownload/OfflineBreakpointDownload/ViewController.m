@@ -10,6 +10,7 @@
 #import "MHOfflineBreakPointDownloadHelper.h"
 
 #define kFileUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/video.mp4"
+#define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
 
 typedef struct MYStruct {
     int a;
@@ -39,22 +40,26 @@ typedef struct MYStruct {
 //    } completionBlock:^(NSError *error) {
 //        
 //    }];
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] startDownLoadWithUrl:kFileUrl progressBlock:^(CGFloat currentSize, CGFloat totalSize) {
-        CGFloat progress = currentSize / totalSize;
-        self.progressView.progress = progress;
-        NSLog(@"progress : %.2f", progress);
-    } completionBlock:^(NSError *error) {
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
+        NSLog(@"thread : %@, url : %@, 执行下载 --- %.2f", [NSThread currentThread], downloadModel.fileUrl, currentSize / totalSize);
+    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
+        
+    }];
+    
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kGifUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
+        NSLog(@"thread : %@, url : %@, 执行下载 --- %.2f", [NSThread currentThread], downloadModel.fileUrl, currentSize / totalSize);
+    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
         
     }];
 }
 
 - (IBAction)suspendAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl progressBlock:^(CGFloat currentSize, CGFloat totalSize) {
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
         CGFloat progress = currentSize / totalSize;
         self.progressView.progress = progress;
         NSLog(@"progress : %.2f", progress);
         
-    } completionBlock:^(NSError *error) {
+    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
         
     }];;
 }
@@ -64,14 +69,26 @@ typedef struct MYStruct {
 }
 
 - (IBAction)goOnAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl progressBlock:^(CGFloat currentSize, CGFloat totalSize) {
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
         CGFloat progress = currentSize / totalSize;
         self.progressView.progress = progress;
-        NSLog(@"progress : %.2f", progress);
+        NSLog(@"thread : %@, progress : %.2f", [NSThread currentThread], progress);
         
-    } completionBlock:^(NSError *error) {
+    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
         
     }];;
+}
+
+- (IBAction)deleteFileAction:(id)sender {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtPath:[self getFilePathWithUrl:kFileUrl.lastPathComponent] error:nil];
+    
+}
+
+- (NSString *)getFilePathWithUrl:(NSString *)url {
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:url.lastPathComponent];
+    return path;
 }
 
 - (void)download {

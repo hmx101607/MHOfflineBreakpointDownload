@@ -55,17 +55,28 @@
                                     <action selector="goOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l9I-T4-Gz4"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpz-sl-Pcr">
+                                <rect key="frame" x="156" y="412" width="62" height="30"/>
+                                <state key="normal" title="删除文件"/>
+                                <connections>
+                                    <action selector="deleteFileAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pFj-eA-jr8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="zW0-FD-BsV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1Jm-Vc-fMf"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AfC-Vi-syO"/>
+                            <constraint firstItem="NBf-5M-XTb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BuO-po-lDp"/>
+                            <constraint firstItem="Tpz-sl-Pcr" firstAttribute="top" secondItem="NBf-5M-XTb" secondAttribute="bottom" constant="50" id="HqM-Ru-FPz"/>
                             <constraint firstItem="nrA-iT-HJP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MOV-Wn-l2X"/>
                             <constraint firstItem="zW0-FD-BsV" firstAttribute="top" secondItem="hGy-bx-aVN" secondAttribute="bottom" constant="50" id="RwJ-Oz-4wX"/>
                             <constraint firstItem="hGy-bx-aVN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="ajp-Mf-d5V"/>
                             <constraint firstItem="nrA-iT-HJP" firstAttribute="top" secondItem="lNs-Op-yO4" secondAttribute="bottom" constant="50" id="bsI-hR-sUw"/>
+                            <constraint firstItem="NBf-5M-XTb" firstAttribute="top" secondItem="nrA-iT-HJP" secondAttribute="bottom" constant="50" id="d5i-I5-pTI"/>
                             <constraint firstAttribute="trailing" secondItem="hGy-bx-aVN" secondAttribute="trailing" constant="50" id="dYC-r4-F7A"/>
                             <constraint firstItem="lNs-Op-yO4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gxT-dD-vIK"/>
+                            <constraint firstItem="Tpz-sl-Pcr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hgT-dc-4m2"/>
                             <constraint firstItem="hGy-bx-aVN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="50" id="iCI-TP-gtG"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="top" secondItem="nrA-iT-HJP" secondAttribute="bottom" constant="50" id="uTb-b7-ynV"/>
                             <constraint firstItem="lNs-Op-yO4" firstAttribute="top" secondItem="zW0-FD-BsV" secondAttribute="bottom" constant="50" id="wdE-ty-t7A"/>

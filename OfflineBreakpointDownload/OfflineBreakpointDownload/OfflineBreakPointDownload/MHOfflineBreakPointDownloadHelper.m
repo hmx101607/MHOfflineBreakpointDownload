@@ -20,13 +20,6 @@
 
 @implementation MHDownloadModel
 
-- (instancetype)init {
-    if (self = [super init]) {
-//        self.currentSize = 0;
-//        self.totalSize = 1;
-    }
-    return self;
-}
 
 @end
 
@@ -42,10 +35,6 @@
 @property (strong, nonatomic) NSMutableArray *downloadTasks;
 /** <##> */
 @property (assign, nonatomic) NSInteger maxConcurrentOperationCount;
-/** 进度回调 */
-@property (copy, nonatomic) progressBlock progressBlock;
-/** 完成回调 */
-@property (copy, nonatomic) completionBlock completionBlock;
 
 @end
 
@@ -64,30 +53,27 @@
     return downloadHelper;
 }
 
-- (void)addDownloadQueue:(NSString *)fileUrl progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock{
+- (void)addDownloadQueue:(NSString *)fileUrl {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
-        [self goOnDownLoadWithUrl:downloadModel.fileUrl progressBlock:nil completionBlock:nil];
+        [self goOnDownLoadWithUrl:downloadModel.fileUrl];
     } else {
         downloadModel = [MHDownloadModel new];
         downloadModel.fileUrl = fileUrl;
         [self.downloadTasks addObject:downloadModel];
         
-        [self startDownLoadWithUrl:fileUrl progressBlock:progressBlock completionBlock:completionBlock];
+        [self startDownLoadWithUrl:fileUrl];
     }
 }
 
 /** 开始下载 */
-- (void)startDownLoadWithUrl:(NSString *)url progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock {
+- (void)startDownLoadWithUrl:(NSString *)url {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     NSURLSessionDataTask *task = downloadModel.task;
     if (task && task.state == NSURLSessionTaskStateRunning) {
         return;
     }
     task = [self downloadDataTaskWithUrl:url];
-    self.progressBlock = progressBlock;
-    self.completionBlock = completionBlock;
-    
     __weak typeof(self) weakSelf = self;
     MHCustomOperation *operation = [MHCustomOperation operationWithURLSessionTask:nil sessionBlock:^NSURLSessionTask *{
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -137,11 +123,8 @@ didReceiveResponse:(NSURLResponse *)response
     downloadModel.downloadStatus = MHDownloadStatusDownloading;
     [downloadModel.handle writeData:data];
     downloadModel.currentSize += data.length;
-    if (self.progressBlock) {
-        self.progressBlock(downloadModel, downloadModel.currentSize * 1.0, downloadModel.totalSize * 1.0);
-    }
-    if ([self.delegate respondsToSelector:@selector(downloadProgressWithDownloadModel:CurrentSize:totalSize:)]) {
-        [self.delegate downloadProgressWithDownloadModel:downloadModel CurrentSize:downloadModel.currentSize * 1.0 totalSize:downloadModel.totalSize * 1.0];
+    if ([self.delegate respondsToSelector:@selector(downloadProgressWithDownloadModel:)]) {
+        [self.delegate downloadProgressWithDownloadModel:downloadModel];
     }
 }
 
@@ -157,9 +140,6 @@ didCompleteWithError:(nullable NSError *)error{
     } else {
         downloadModel.downloadStatus = MHDownloadStatusDownloadComplete;
     }
-    if (self.completionBlock) {
-        self.completionBlock(downloadModel, error);
-    }
     if ([self.delegate respondsToSelector:@selector(downloadCompletionWithDownloadModel:error:)]) {
         [self.delegate downloadCompletionWithDownloadModel:downloadModel error:error];
     }
@@ -168,15 +148,13 @@ didCompleteWithError:(nullable NSError *)error{
 }
 
 /** 暂停下载 */
-- (void)suspendDownLoadWithUrl:(NSString *)url progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock {
+- (void)suspendDownLoadWithUrl:(NSString *)url{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
     NSURLSessionDataTask *task = downloadModel.task;
     if (!task || task.state == NSURLSessionTaskStateSuspended) {
         return;
     }
-    self.progressBlock = progressBlock;
-    self.completionBlock = completionBlock;
     [task suspend];
 }
 
@@ -197,14 +175,12 @@ didCompleteWithError:(nullable NSError *)error{
 }
 
 /** 继续下载 */
-- (void)goOnDownLoadWithUrl:(NSString *)url progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock {
+- (void)goOnDownLoadWithUrl:(NSString *)url{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     NSURLSessionDataTask *task = downloadModel.task;
     if (!task || task.state == NSURLSessionTaskStateRunning) {
         return;
     }
-    self.progressBlock = progressBlock;
-    self.completionBlock = completionBlock;
     [task resume];
 }
 

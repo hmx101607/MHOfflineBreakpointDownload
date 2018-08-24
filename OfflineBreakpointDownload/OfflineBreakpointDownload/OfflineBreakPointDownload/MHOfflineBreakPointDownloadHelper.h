@@ -36,12 +36,12 @@ typedef NS_ENUM(NSInteger, MHDownloadStatus) {
  资源默认保存在沙盒Cache中
  */
 
-typedef void(^progressBlock) (MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize);
-typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
+//typedef void(^progressBlock) (MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize);
+//typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
 
 @protocol MHOfflineBreakPointDownloadHelperDelegate <NSObject>
 
-- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel CurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize;
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel;
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error;
 
 @end
@@ -60,25 +60,16 @@ typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
  */
 - (void)setMaxConcurrentOperationCount:(NSInteger)count;
 
-- (void)addDownloadQueue:(NSString *)fileUrl progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock;
-
-/** 开始下载 */
-- (void)startDownLoadWithUrl:(NSString *)url
-               progressBlock:(progressBlock)progressBlock
-             completionBlock:(completionBlock)completionBlock;
+- (void)addDownloadQueue:(NSString *)fileUrl;
 
 /** 暂停下载 */
-- (void)suspendDownLoadWithUrl:(NSString *)url
-                 progressBlock:(progressBlock)progressBlock
-               completionBlock:(completionBlock)completionBlock;
+- (void)suspendDownLoadWithUrl:(NSString *)url;
 
 /** 取消下载 */
 - (void)cancelDownLoadWithUrl:(NSString *)url;
 
 /** 继续下载 */
-- (void)goOnDownLoadWithUrl:(NSString *)url
-              progressBlock:(progressBlock)progressBlock
-            completionBlock:(completionBlock)completionBlock;
+- (void)goOnDownLoadWithUrl:(NSString *)url;
 
 
 @end

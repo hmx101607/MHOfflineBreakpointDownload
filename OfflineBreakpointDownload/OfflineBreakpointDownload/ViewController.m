@@ -36,20 +36,13 @@ MHOfflineBreakPointDownloadHelperDelegate
 - (IBAction)startAction:(id)sender {
     
     [MHOfflineBreakPointDownloadHelper shareDownloadInstance].delegate = self;
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl progressBlock:nil completionBlock:nil];
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl];
 //    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kGifUrl progressBlock:nil completionBlock:nil];
 //    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:KWMVUrl progressBlock:nil completionBlock:nil];
 }
 
 - (IBAction)suspendAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
-        CGFloat progress = currentSize / totalSize;
-        self.progressView.progress = progress;
-        NSLog(@"progress : %.2f", progress);
-        
-    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
-        
-    }];;
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)cancelAction:(id)sender {
@@ -57,14 +50,7 @@ MHOfflineBreakPointDownloadHelperDelegate
 }
 
 - (IBAction)goOnAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
-        CGFloat progress = currentSize / totalSize;
-        self.progressView.progress = progress;
-        NSLog(@"thread : %@, progress : %.2f", [NSThread currentThread], progress);
-        
-    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
-        
-    }];;
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)deleteFileAction:(id)sender {

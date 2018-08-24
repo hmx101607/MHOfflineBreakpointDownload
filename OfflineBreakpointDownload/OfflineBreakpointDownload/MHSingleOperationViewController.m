@@ -63,22 +63,22 @@ MHOfflineBreakPointDownloadHelperDelegate
     return cell;
 }
 
-
+#pragma mark - Delegate MHDownloadListItemTableViewCellDelegate
 - (void)startDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:downloadModel.fileUrl progressBlock:nil completionBlock:nil];
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:downloadModel.fileUrl];
 }
 
 - (void)suspendDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.fileUrl progressBlock:nil completionBlock:nil];
-
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.fileUrl];
 }
 
 - (void)cancelDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
     [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] cancelDownLoadWithUrl:downloadModel.fileUrl];
 }
 
-- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel CurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize {
-    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f+++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, currentSize / totalSize, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
+#pragma mark - Delegate MHOfflineBreakPointDownloadHelperDelegate
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel {
+    NSLog(@"thread : %@, url : %@, 下载进度 +++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
     NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
     if (index == -1) {
         return;

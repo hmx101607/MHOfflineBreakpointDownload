@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, MHDownloadStatus) {
+    MHDownloadStatusDownloadSuspend,
+    MHDownloadStatusDownloading,
+    MHDownloadStatusDownloadComplete,
+    MHDownloadStatusDownloadFail,
+    MHDownloadStatusDownloadCancel
+};
+
 @interface MHDownloadModel : NSObject
 
 /** 文件地址 */
@@ -19,6 +27,8 @@
 @property (assign, nonatomic) NSInteger totalSize;
 /** 当前下载大小 */
 @property (assign, nonatomic) NSInteger currentSize;
+/** 下载状态<##> */
+@property (assign, nonatomic)  MHDownloadStatus downloadStatus;
 
 @end
 
@@ -31,8 +41,8 @@ typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
 
 @protocol MHOfflineBreakPointDownloadHelperDelegate <NSObject>
 
-- (void)downloadProgressWithCurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize;
-- (void)downloadCompletion:(NSError *)error;
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel CurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize;
+- (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error;
 
 @end
 
@@ -42,6 +52,13 @@ typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
 @property (weak, nonatomic) id<MHOfflineBreakPointDownloadHelperDelegate>delegate;
 
 + (instancetype)shareDownloadInstance;
+
+/**
+ 最大并发数
+ 
+ @param count 数值
+ */
+- (void)setMaxConcurrentOperationCount:(NSInteger)count;
 
 - (void)addDownloadQueue:(NSString *)fileUrl progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock;
 

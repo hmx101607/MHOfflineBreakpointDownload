@@ -1,5 +1,5 @@
 //
-//  HomeViewController.h
+//  MHHomeViewController.h
 //  OfflineBreakpointDownload
 //
 //  Created by mason on 2018/8/21.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HomeViewController : UIViewController
+@interface MHHomeViewController : UIViewController
 
 @end

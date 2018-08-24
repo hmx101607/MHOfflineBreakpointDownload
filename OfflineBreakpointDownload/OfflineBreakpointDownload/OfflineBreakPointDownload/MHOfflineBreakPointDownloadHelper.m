@@ -20,6 +20,13 @@
 
 @implementation MHDownloadModel
 
+- (instancetype)init {
+    if (self = [super init]) {
+//        self.currentSize = 0;
+//        self.totalSize = 1;
+    }
+    return self;
+}
 
 @end
 
@@ -50,7 +57,7 @@
     dispatch_once(&onceToken, ^{
         downloadHelper = [[MHOfflineBreakPointDownloadHelper alloc] init];
         downloadHelper.operationQueue = [[NSOperationQueue alloc] init];
-        downloadHelper.maxConcurrentOperationCount = 1;
+        downloadHelper.maxConcurrentOperationCount = 3;
         downloadHelper.operationQueue.maxConcurrentOperationCount =downloadHelper.maxConcurrentOperationCount;
         downloadHelper.downloadTasks = [NSMutableArray array];
     });
@@ -60,13 +67,14 @@
 - (void)addDownloadQueue:(NSString *)fileUrl progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
-        return;
+        [self goOnDownLoadWithUrl:downloadModel.fileUrl progressBlock:nil completionBlock:nil];
+    } else {
+        downloadModel = [MHDownloadModel new];
+        downloadModel.fileUrl = fileUrl;
+        [self.downloadTasks addObject:downloadModel];
+        
+        [self startDownLoadWithUrl:fileUrl progressBlock:progressBlock completionBlock:completionBlock];
     }
-    downloadModel = [MHDownloadModel new];
-    downloadModel.fileUrl = fileUrl;
-    [self.downloadTasks addObject:downloadModel];
-    
-    [self startDownLoadWithUrl:fileUrl progressBlock:progressBlock completionBlock:completionBlock];
 }
 
 /** 开始下载 */
@@ -105,11 +113,6 @@
     return dataTask;
 }
 
-- (NSString *)getFilePathWithUrl:(NSString *)url {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:url.lastPathComponent];
-    return path;
-}
-
 #pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate ++++++++++++++++++++++++
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -117,6 +120,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSLog(@"thread : %@, 开始下载 --- %s", [NSThread currentThread], __func__);
     NSString *url = dataTask.currentRequest.URL.absoluteString;
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    downloadModel.downloadStatus = MHDownloadStatusDownloading;
     downloadModel.totalSize = response.expectedContentLength + downloadModel.currentSize; //获取到本次请求的最大数据
     if (downloadModel.currentSize == 0) {
         [[NSFileManager defaultManager] createFileAtPath:[self getFilePathWithUrl:url] contents:nil attributes:nil];
@@ -130,13 +134,14 @@ didReceiveResponse:(NSURLResponse *)response
     didReceiveData:(NSData *)data {
     NSString *url = dataTask.currentRequest.URL.absoluteString;
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    downloadModel.downloadStatus = MHDownloadStatusDownloading;
     [downloadModel.handle writeData:data];
     downloadModel.currentSize += data.length;
     if (self.progressBlock) {
         self.progressBlock(downloadModel, downloadModel.currentSize * 1.0, downloadModel.totalSize * 1.0);
     }
-    if ([self.delegate respondsToSelector:@selector(downloadProgressWithCurrentSize:totalSize:)]) {
-        [self.delegate downloadProgressWithCurrentSize:downloadModel.currentSize * 1.0 totalSize:downloadModel.totalSize * 1.0];
+    if ([self.delegate respondsToSelector:@selector(downloadProgressWithDownloadModel:CurrentSize:totalSize:)]) {
+        [self.delegate downloadProgressWithDownloadModel:downloadModel CurrentSize:downloadModel.currentSize * 1.0 totalSize:downloadModel.totalSize * 1.0];
     }
 }
 
@@ -147,18 +152,25 @@ didCompleteWithError:(nullable NSError *)error{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     [downloadModel.handle closeFile];
     downloadModel.handle = nil;
+    if (error) {
+        downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
+    } else {
+        downloadModel.downloadStatus = MHDownloadStatusDownloadComplete;
+    }
     if (self.completionBlock) {
         self.completionBlock(downloadModel, error);
     }
-    if ([self.delegate respondsToSelector:@selector(downloadCompletion:)]) {
-        [self.delegate downloadCompletion:error];
+    if ([self.delegate respondsToSelector:@selector(downloadCompletionWithDownloadModel:error:)]) {
+        [self.delegate downloadCompletionWithDownloadModel:downloadModel error:error];
     }
+    [downloadModel.task cancel];
     [self removeDownloadModelWithFileUrl:url];
 }
 
 /** 暂停下载 */
 - (void)suspendDownLoadWithUrl:(NSString *)url progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
     NSURLSessionDataTask *task = downloadModel.task;
     if (!task || task.state == NSURLSessionTaskStateSuspended) {
         return;
@@ -177,6 +189,10 @@ didCompleteWithError:(nullable NSError *)error{
     }
     [task cancel];
     task = nil;
+    NSString *path = [self getFilePathWithUrl:url];
+    if (path && path.length > 0) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    }
     [self removeDownloadModelWithFileUrl:url];
 }
 
@@ -193,21 +209,31 @@ didCompleteWithError:(nullable NSError *)error{
 }
 
 - (MHDownloadModel *)fetchDownloadModelWithFileUrl:(NSString *)fileUrl {
-    for (MHDownloadModel *model in self.downloadTasks) {
-        if ([model.fileUrl isEqualToString:fileUrl]) {
-            return model;
+    @synchronized(self.downloadTasks) {
+        for (MHDownloadModel *model in self.downloadTasks) {
+            if ([model.fileUrl isEqualToString:fileUrl]) {
+                return model;
+            }
         }
     }
     return nil;;
 }
 
 - (void)removeDownloadModelWithFileUrl:(NSString *)fileUrl {
-    for (MHDownloadModel *model in self.downloadTasks) {
-        if ([model.fileUrl isEqualToString:fileUrl]) {
-            [self.downloadTasks removeObject:model];
-            break;
+    @synchronized(self.downloadTasks) {
+        for (MHDownloadModel *model in self.downloadTasks) {
+            if ([model.fileUrl isEqualToString:fileUrl]) {
+                [self.downloadTasks removeObject:model];
+                break;
+            }
         }
     }
+}
+
+- (NSString *)getFilePathWithUrl:(NSString *)url {
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:url.lastPathComponent];
+    NSLog(@"path : %@", path);
+    return path;
 }
 
 @end

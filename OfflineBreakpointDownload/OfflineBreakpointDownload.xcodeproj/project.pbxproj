@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		930C1A1E212BC4ED0084498E /* MHCustomOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C1A1C212BC4ED0084498E /* MHCustomOperation.m */; };
-		930C1A25212BEA040084498E /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C1A24212BEA040084498E /* HomeViewController.m */; };
+		930C1A25212BEA040084498E /* MHHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C1A24212BEA040084498E /* MHHomeViewController.m */; };
 		9314BBA81ED8135C00127E1A /* MHOfflineBreakPointDownloadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9314BBA71ED8135C00127E1A /* MHOfflineBreakPointDownloadHelper.m */; };
+		9368D79E212FA5930090B88B /* MHSingleOperationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D79D212FA5930090B88B /* MHSingleOperationViewController.m */; };
+		9368D7A2212FB8510090B88B /* MHDownloadListItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7A0212FB8510090B88B /* MHDownloadListItemTableViewCell.m */; };
+		9368D7A3212FB8510090B88B /* MHDownloadListItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9368D7A1212FB8510090B88B /* MHDownloadListItemTableViewCell.xib */; };
 		93A4F37B1ED7D6C300CA88E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37A1ED7D6C300CA88E9 /* main.m */; };
 		93A4F37E1ED7D6C300CA88E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37D1ED7D6C300CA88E9 /* AppDelegate.m */; };
 		93A4F3811ED7D6C300CA88E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F3801ED7D6C300CA88E9 /* ViewController.m */; };
@@ -21,10 +24,15 @@
 /* Begin PBXFileReference section */
 		930C1A1C212BC4ED0084498E /* MHCustomOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHCustomOperation.m; sourceTree = "<group>"; };
 		930C1A1D212BC4ED0084498E /* MHCustomOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHCustomOperation.h; sourceTree = "<group>"; };
-		930C1A23212BEA040084498E /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
-		930C1A24212BEA040084498E /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		930C1A23212BEA040084498E /* MHHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHHomeViewController.h; sourceTree = "<group>"; };
+		930C1A24212BEA040084498E /* MHHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHHomeViewController.m; sourceTree = "<group>"; };
 		9314BBA61ED8135C00127E1A /* MHOfflineBreakPointDownloadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHOfflineBreakPointDownloadHelper.h; sourceTree = "<group>"; };
 		9314BBA71ED8135C00127E1A /* MHOfflineBreakPointDownloadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHOfflineBreakPointDownloadHelper.m; sourceTree = "<group>"; };
+		9368D79C212FA5930090B88B /* MHSingleOperationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHSingleOperationViewController.h; sourceTree = "<group>"; };
+		9368D79D212FA5930090B88B /* MHSingleOperationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHSingleOperationViewController.m; sourceTree = "<group>"; };
+		9368D79F212FB8510090B88B /* MHDownloadListItemTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHDownloadListItemTableViewCell.h; sourceTree = "<group>"; };
+		9368D7A0212FB8510090B88B /* MHDownloadListItemTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHDownloadListItemTableViewCell.m; sourceTree = "<group>"; };
+		9368D7A1212FB8510090B88B /* MHDownloadListItemTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MHDownloadListItemTableViewCell.xib; sourceTree = "<group>"; };
 		93A4F3761ED7D6C300CA88E9 /* OfflineBreakpointDownload.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineBreakpointDownload.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A4F37A1ED7D6C300CA88E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		93A4F37C1ED7D6C300CA88E9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -88,8 +96,13 @@
 				93A4F3871ED7D6C300CA88E9 /* LaunchScreen.storyboard */,
 				93A4F38A1ED7D6C300CA88E9 /* Info.plist */,
 				93A4F3791ED7D6C300CA88E9 /* Supporting Files */,
-				930C1A23212BEA040084498E /* HomeViewController.h */,
-				930C1A24212BEA040084498E /* HomeViewController.m */,
+				930C1A23212BEA040084498E /* MHHomeViewController.h */,
+				930C1A24212BEA040084498E /* MHHomeViewController.m */,
+				9368D79C212FA5930090B88B /* MHSingleOperationViewController.h */,
+				9368D79D212FA5930090B88B /* MHSingleOperationViewController.m */,
+				9368D79F212FB8510090B88B /* MHDownloadListItemTableViewCell.h */,
+				9368D7A0212FB8510090B88B /* MHDownloadListItemTableViewCell.m */,
+				9368D7A1212FB8510090B88B /* MHDownloadListItemTableViewCell.xib */,
 			);
 			path = OfflineBreakpointDownload;
 			sourceTree = "<group>";
@@ -163,6 +176,7 @@
 				93A4F3891ED7D6C300CA88E9 /* LaunchScreen.storyboard in Resources */,
 				93A4F3861ED7D6C300CA88E9 /* Assets.xcassets in Resources */,
 				93A4F3841ED7D6C300CA88E9 /* ViewController.storyboard in Resources */,
+				9368D7A3212FB8510090B88B /* MHDownloadListItemTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,9 +190,11 @@
 				93A4F3811ED7D6C300CA88E9 /* ViewController.m in Sources */,
 				9314BBA81ED8135C00127E1A /* MHOfflineBreakPointDownloadHelper.m in Sources */,
 				930C1A1E212BC4ED0084498E /* MHCustomOperation.m in Sources */,
+				9368D79E212FA5930090B88B /* MHSingleOperationViewController.m in Sources */,
 				93A4F37E1ED7D6C300CA88E9 /* AppDelegate.m in Sources */,
+				9368D7A2212FB8510090B88B /* MHDownloadListItemTableViewCell.m in Sources */,
 				93A4F37B1ED7D6C300CA88E9 /* main.m in Sources */,
-				930C1A25212BEA040084498E /* HomeViewController.m in Sources */,
+				930C1A25212BEA040084498E /* MHHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

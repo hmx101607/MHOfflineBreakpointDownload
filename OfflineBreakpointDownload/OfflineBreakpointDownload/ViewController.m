@@ -11,6 +11,7 @@
 
 #define kFileUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/video.mp4"
 #define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
+#define KWMVUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/1102.wmv"
 
 typedef struct MYStruct {
     int a;
@@ -19,7 +20,9 @@ typedef struct MYStruct {
 }myStruct;
 
 @interface ViewController ()
-
+<
+MHOfflineBreakPointDownloadHelperDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 
@@ -32,25 +35,10 @@ typedef struct MYStruct {
 
 - (IBAction)startAction:(id)sender {
     
-    
-    NSRange range = NSMakeRange(10, 10);
-    
-//    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] startDownLoadWithProgressBlock:^(CGFloat currentSize, CGFloat totalSize) {
-//        
-//    } completionBlock:^(NSError *error) {
-//        
-//    }];
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
-        NSLog(@"thread : %@, url : %@, 执行下载 --- %.2f", [NSThread currentThread], downloadModel.fileUrl, currentSize / totalSize);
-    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
-        
-    }];
-    
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kGifUrl progressBlock:^(MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize) {
-        NSLog(@"thread : %@, url : %@, 执行下载 --- %.2f", [NSThread currentThread], downloadModel.fileUrl, currentSize / totalSize);
-    } completionBlock:^(MHDownloadModel *downloadModel, NSError *error) {
-        
-    }];
+    [MHOfflineBreakPointDownloadHelper shareDownloadInstance].delegate = self;
+    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl progressBlock:nil completionBlock:nil];
+//    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kGifUrl progressBlock:nil completionBlock:nil];
+//    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:KWMVUrl progressBlock:nil completionBlock:nil];
 }
 
 - (IBAction)suspendAction:(id)sender {
@@ -91,19 +79,31 @@ typedef struct MYStruct {
     return path;
 }
 
-- (void)download {
-//    MHOfflineBreakPointDownloadHelper *downloadHelper = [MHOfflineBreakPointDownloadHelper shareDownloadInstance];
-//    [downloadHelper setProgressBlock:^(CGFloat currentSize, CGFloat totalSize){
-//        NSLog(@" %zd ------ 下载进度 : %f", __func__, currentSize / totalSize);
-//        self.progressView.progress = currentSize / totalSize;
-//    }];
-//
-//    [downloadHelper setCompletionBlock:^(NSError *error){
-//
-//    }];
-//    //@"http://7qnbrb.com1.z0.glb.clouddn.com/abc.mp3"//@"http://120.25.226.186:32812/resources/videos/minion_01.mp4"
-//    downloadHelper.sourceUrl = @"http://7qnbrb.com1.z0.glb.clouddn.com/abc.mp3";
-//    [downloadHelper startDownLoad];
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel CurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize {
+    CGFloat progress = currentSize / totalSize;
+    self.progressView.progress = progress;
+    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, currentSize / totalSize);
+}
+
+- (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error {
+    
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

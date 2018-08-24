@@ -31,12 +31,14 @@
 
 /** <##> */
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
+/** <##> */
+@property (strong, nonatomic) NSMutableArray *downloadTasks;
+/** <##> */
+@property (assign, nonatomic) NSInteger maxConcurrentOperationCount;
 /** 进度回调 */
 @property (copy, nonatomic) progressBlock progressBlock;
 /** 完成回调 */
 @property (copy, nonatomic) completionBlock completionBlock;
-/** <##> */
-@property (strong, nonatomic) NSMutableArray *downloadTasks;
 
 @end
 
@@ -48,13 +50,19 @@
     dispatch_once(&onceToken, ^{
         downloadHelper = [[MHOfflineBreakPointDownloadHelper alloc] init];
         downloadHelper.operationQueue = [[NSOperationQueue alloc] init];
+        downloadHelper.maxConcurrentOperationCount = 1;
+        downloadHelper.operationQueue.maxConcurrentOperationCount =downloadHelper.maxConcurrentOperationCount;
         downloadHelper.downloadTasks = [NSMutableArray array];
     });
     return downloadHelper;
 }
 
 - (void)addDownloadQueue:(NSString *)fileUrl progressBlock:(progressBlock)progressBlock completionBlock:(completionBlock)completionBlock{
-    MHDownloadModel *downloadModel = [MHDownloadModel new];
+    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
+    if (downloadModel) {
+        return;
+    }
+    downloadModel = [MHDownloadModel new];
     downloadModel.fileUrl = fileUrl;
     [self.downloadTasks addObject:downloadModel];
     
@@ -79,7 +87,6 @@
         return [strongSelf downloadDataTaskWithUrl:url];
     }];
     [self.operationQueue addOperation:operation];
-    
 }
 
 
@@ -116,7 +123,6 @@ didReceiveResponse:(NSURLResponse *)response
     }
     downloadModel.handle = [NSFileHandle fileHandleForWritingAtPath:[self getFilePathWithUrl:url]];
     [downloadModel.handle seekToEndOfFile]; // 要插入的数据移动到最后
-    
     completionHandler (NSURLSessionResponseAllow);
 }
 

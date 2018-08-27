@@ -1,13 +1,13 @@
 //
-//  MHCustomOperation.m
+//  MHURLSessionTaskOperation.m
 //  Module-Common
 //
 //  Created by mason on 2018/8/2.
 //
 
-#import "MHCustomOperation.h"
+#import "MHURLSessionTaskOperation.h"
 
-@interface MHCustomOperation()
+@interface MHURLSessionTaskOperation()
 {
     BOOL executing;
     BOOL finished;
@@ -22,11 +22,11 @@
 
 @end
 
-@implementation MHCustomOperation
+@implementation MHURLSessionTaskOperation
 
 
 + (instancetype)operationWithURLSessionTask:(NSURLSessionTask *)task sessionBlock:(sessionBlock)sessionBlock {
-    MHCustomOperation *operation = [MHCustomOperation new];
+    MHURLSessionTaskOperation *operation = [MHURLSessionTaskOperation new];
     operation.sessionBlock = sessionBlock;
     return operation;
 }

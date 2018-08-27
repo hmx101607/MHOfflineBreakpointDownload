@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MHOfflineBreakPointDownloadHelper.h"
+#import "MHOfflineBreakPointDownloadManager.h"
 
 @protocol MHDownloadListItemTableViewCellDelegate<NSObject>
 

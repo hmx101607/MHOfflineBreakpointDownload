@@ -35,15 +35,17 @@
     }
     self.progressView.progress = progress;
     self.progressLabel.text = [NSString stringWithFormat:@"%f%%", progress*100];
+    NSLog(@"downloadStatus : %ld", downloadModel.downloadStatus);
     switch (downloadModel.downloadStatus) {
         case MHDownloadStatusDownloadSuspend:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            self.progressLabel.text = @"暂停";
             break;
         }
         case MHDownloadStatusDownloading:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             break;
         }
         case MHDownloadStatusDownloadComplete:
@@ -67,6 +69,7 @@
     switch (self.downloadModel.downloadStatus) {
         case MHDownloadStatusDownloadSuspend:
         {
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
                 [self.delegate startDownloadWithDownloadModel:self.downloadModel];
             }
@@ -74,6 +77,7 @@
         }
         case MHDownloadStatusDownloading:
         {
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(suspendDownloadWithDownloadModel:)]) {
                 [self.delegate suspendDownloadWithDownloadModel:self.downloadModel];
             }

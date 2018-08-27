@@ -8,7 +8,7 @@
 
 #import "MHSingleOperationViewController.h"
 #import "MHDownloadListItemTableViewCell.h"
-#import "MHOfflineBreakPointDownloadHelper.h"
+#import "MHOfflineBreakPointDownloadManager.h"
 
 static NSString *const kDownloadCellIdentifier = @"kDownloadCellIdentifier";
 
@@ -21,7 +21,7 @@ static NSString *const kDownloadCellIdentifier = @"kDownloadCellIdentifier";
 UITableViewDelegate,
 UITableViewDataSource,
 MHDownloadListItemTableViewCellDelegate,
-MHOfflineBreakPointDownloadHelperDelegate
+MHOfflineBreakPointDownloadManagerDelegate
 >
 /** <##> */
 @property (strong, nonatomic) UITableView *tableView;
@@ -35,7 +35,7 @@ MHOfflineBreakPointDownloadHelperDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    [MHOfflineBreakPointDownloadHelper shareDownloadInstance].delegate = self;
+    [MHOfflineBreakPointDownloadManager shareDownloadInstance].delegate = self;
 
     [self setupView];
 }
@@ -65,20 +65,26 @@ MHOfflineBreakPointDownloadHelperDelegate
 
 #pragma mark - Delegate MHDownloadListItemTableViewCellDelegate
 - (void)startDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:downloadModel.fileUrl];
 }
 
 - (void)suspendDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.fileUrl];
 }
 
 - (void)cancelDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] cancelDownLoadWithUrl:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] cancelDownLoadWithUrl:downloadModel.fileUrl];
+    NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
+    if (index == -1) {
+        return;
+    }
+    [self.itemArray removeObjectAtIndex:index];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Delegate MHOfflineBreakPointDownloadHelperDelegate
 - (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel {
-    NSLog(@"thread : %@, url : %@, 下载进度 +++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
+//    NSLog(@"thread : %@, url : %@, 下载进度 +++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
     NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
     if (index == -1) {
         return;

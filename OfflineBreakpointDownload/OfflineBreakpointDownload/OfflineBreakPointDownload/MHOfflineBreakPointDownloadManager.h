@@ -1,5 +1,5 @@
 //
-//  MHOfflineBreakPointDownloadHelper.h
+//  MHOfflineBreakPointDownloadManager.h
 //  OfflineBreakpointDownload
 //
 //  Created by mason on 2017/5/26.
@@ -8,29 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-
-typedef NS_ENUM(NSInteger, MHDownloadStatus) {
-    MHDownloadStatusDownloadSuspend,
-    MHDownloadStatusDownloading,
-    MHDownloadStatusDownloadComplete,
-    MHDownloadStatusDownloadFail,
-    MHDownloadStatusDownloadCancel
-};
-
-@interface MHDownloadModel : NSObject
-
-/** 文件地址 */
-@property (strong, nonatomic) NSString *fileUrl;
-/** 文件名称 */
-@property (strong, nonatomic) NSString *fileName;
-/** 总大小 */
-@property (assign, nonatomic) NSInteger totalSize;
-/** 当前下载大小 */
-@property (assign, nonatomic) NSInteger currentSize;
-/** 下载状态<##> */
-@property (assign, nonatomic)  MHDownloadStatus downloadStatus;
-
-@end
+#import "MHDownloadModel.h"
 
 /**
  资源默认保存在沙盒Cache中
@@ -39,7 +17,7 @@ typedef NS_ENUM(NSInteger, MHDownloadStatus) {
 //typedef void(^progressBlock) (MHDownloadModel *downloadModel, CGFloat currentSize, CGFloat totalSize);
 //typedef void(^completionBlock) (MHDownloadModel *downloadModel, NSError *error);
 
-@protocol MHOfflineBreakPointDownloadHelperDelegate <NSObject>
+@protocol MHOfflineBreakPointDownloadManagerDelegate <NSObject>
 
 - (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel;
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error;
@@ -47,9 +25,9 @@ typedef NS_ENUM(NSInteger, MHDownloadStatus) {
 @end
 
 
-@interface MHOfflineBreakPointDownloadHelper : NSObject
+@interface MHOfflineBreakPointDownloadManager : NSObject
 
-@property (weak, nonatomic) id<MHOfflineBreakPointDownloadHelperDelegate>delegate;
+@property (weak, nonatomic) id<MHOfflineBreakPointDownloadManagerDelegate>delegate;
 
 + (instancetype)shareDownloadInstance;
 

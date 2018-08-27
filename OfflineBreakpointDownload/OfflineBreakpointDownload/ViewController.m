@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "MHOfflineBreakPointDownloadHelper.h"
+#import "MHOfflineBreakPointDownloadManager.h"
 
 #define kFileUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/video.mp4"
 #define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
@@ -21,7 +21,7 @@ typedef struct MYStruct {
 
 @interface ViewController ()
 <
-MHOfflineBreakPointDownloadHelperDelegate
+MHOfflineBreakPointDownloadManagerDelegate
 >
 
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
@@ -35,22 +35,20 @@ MHOfflineBreakPointDownloadHelperDelegate
 
 - (IBAction)startAction:(id)sender {
     
-    [MHOfflineBreakPointDownloadHelper shareDownloadInstance].delegate = self;
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kFileUrl];
-//    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:kGifUrl progressBlock:nil completionBlock:nil];
-//    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] addDownloadQueue:KWMVUrl progressBlock:nil completionBlock:nil];
+    [MHOfflineBreakPointDownloadManager shareDownloadInstance].delegate = self;
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:kFileUrl];
 }
 
 - (IBAction)suspendAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] suspendDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)cancelAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] cancelDownLoadWithUrl:kFileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] cancelDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)goOnAction:(id)sender {
-    [[MHOfflineBreakPointDownloadHelper shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl];
 }
 
 - (IBAction)deleteFileAction:(id)sender {
@@ -65,15 +63,18 @@ MHOfflineBreakPointDownloadHelperDelegate
     return path;
 }
 
-- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel CurrentSize:(CGFloat)currentSize totalSize:(CGFloat)totalSize {
-    CGFloat progress = currentSize / totalSize;
-    self.progressView.progress = progress;
-    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, currentSize / totalSize);
-}
 
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error {
+    CGFloat progress = downloadModel.currentSize * 1.0 / downloadModel.totalSize * 1.0;
+    self.progressView.progress = progress;
+    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, progress);
+}
+
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel { 
     
 }
+
+
 
 @end
 

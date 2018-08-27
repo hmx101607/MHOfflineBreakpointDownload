@@ -1,30 +1,16 @@
 //
-//  MHOfflineBreakPointDownloadHelper.m
+//  MHOfflineBreakPointDownloadManager.m
 //  OfflineBreakpointDownload
 //
 //  Created by mason on 2017/5/26.
 //  Copyright © 2017年 mason. All rights reserved.
 //
 
-#import "MHOfflineBreakPointDownloadHelper.h"
-#import "MHCustomOperation.h"
-
-@interface MHDownloadModel()
-
-/** 句柄，处理离线下载进度 */
-@property (strong, nonatomic) NSFileHandle *handle;
-/** <##> */
-@property (strong, nonatomic) NSURLSessionDataTask *task;
-
-@end
-
-@implementation MHDownloadModel
+#import "MHOfflineBreakPointDownloadManager.h"
+#import "MHURLSessionTaskOperation.h"
 
 
-@end
-
-
-@interface MHOfflineBreakPointDownloadHelper()
+@interface MHOfflineBreakPointDownloadManager()
 <
  NSURLSessionDataDelegate
 >
@@ -38,13 +24,13 @@
 
 @end
 
-@implementation MHOfflineBreakPointDownloadHelper
+@implementation MHOfflineBreakPointDownloadManager
 
 + (instancetype)shareDownloadInstance {
-    static MHOfflineBreakPointDownloadHelper *downloadHelper = nil;
+    static MHOfflineBreakPointDownloadManager *downloadHelper = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        downloadHelper = [[MHOfflineBreakPointDownloadHelper alloc] init];
+        downloadHelper = [[MHOfflineBreakPointDownloadManager alloc] init];
         downloadHelper.operationQueue = [[NSOperationQueue alloc] init];
         downloadHelper.maxConcurrentOperationCount = 3;
         downloadHelper.operationQueue.maxConcurrentOperationCount =downloadHelper.maxConcurrentOperationCount;
@@ -75,7 +61,7 @@
     }
     task = [self downloadDataTaskWithUrl:url];
     __weak typeof(self) weakSelf = self;
-    MHCustomOperation *operation = [MHCustomOperation operationWithURLSessionTask:nil sessionBlock:^NSURLSessionTask *{
+    MHURLSessionTaskOperation *operation = [MHURLSessionTaskOperation operationWithURLSessionTask:nil sessionBlock:^NSURLSessionTask *{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         NSLog(@"thread : %@, MHCustomOperation operationWithURLSessionTask", [NSThread currentThread]);
         return [strongSelf downloadDataTaskWithUrl:url];
@@ -120,7 +106,6 @@ didReceiveResponse:(NSURLResponse *)response
     didReceiveData:(NSData *)data {
     NSString *url = dataTask.currentRequest.URL.absoluteString;
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
-    downloadModel.downloadStatus = MHDownloadStatusDownloading;
     [downloadModel.handle writeData:data];
     downloadModel.currentSize += data.length;
     if ([self.delegate respondsToSelector:@selector(downloadProgressWithDownloadModel:)]) {
@@ -136,7 +121,13 @@ didCompleteWithError:(nullable NSError *)error{
     [downloadModel.handle closeFile];
     downloadModel.handle = nil;
     if (error) {
-        downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
+        if (downloadModel.downloadStatus != MHDownloadStatusDownloadSuspend) {
+            if ([error.userInfo[NSLocalizedDescriptionKey] isEqualToString:@"cancelled"]) {
+                downloadModel.downloadStatus = MHDownloadStatusDownloadCancel;
+            } else {
+                downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
+            }
+        }
     } else {
         downloadModel.downloadStatus = MHDownloadStatusDownloadComplete;
     }
@@ -150,12 +141,14 @@ didCompleteWithError:(nullable NSError *)error{
 /** 暂停下载 */
 - (void)suspendDownLoadWithUrl:(NSString *)url{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
-    downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
     NSURLSessionDataTask *task = downloadModel.task;
     if (!task || task.state == NSURLSessionTaskStateSuspended) {
         return;
     }
-    [task suspend];
+    downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
+    [task cancel];
+    
+    //数据库中保留数据
 }
 
 /** 取消下载 */
@@ -171,6 +164,15 @@ didCompleteWithError:(nullable NSError *)error{
     if (path && path.length > 0) {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
+    //从数据库及文件中移除
+    
+    //从磁盘中删除该条数据
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtPath:[self getFilePathWithUrl:downloadModel.fileUrl.lastPathComponent] error:&error];
+    if (error) {
+        NSLog(@"移除失败  : %@", error);
+    }
+    //从数据源中删除
     [self removeDownloadModelWithFileUrl:url];
 }
 

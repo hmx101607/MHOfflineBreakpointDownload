@@ -65,16 +65,16 @@ MHOfflineBreakPointDownloadManagerDelegate
 
 #pragma mark - Delegate MHDownloadListItemTableViewCellDelegate
 - (void)startDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:downloadModel.filePath];
 }
 
 - (void)suspendDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] suspendDownLoadWithUrl:downloadModel.filePath];
 }
 
 - (void)cancelDownloadWithDownloadModel:(MHDownloadModel *)downloadModel {
-    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] cancelDownLoadWithUrl:downloadModel.fileUrl];
-    NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] cancelDownLoadWithUrl:downloadModel.filePath];
+    NSInteger index = [self fetchDownloadModelWithFilePath:downloadModel.filePath];
     if (index == -1) {
         return;
     }
@@ -85,7 +85,7 @@ MHOfflineBreakPointDownloadManagerDelegate
 #pragma mark - Delegate MHOfflineBreakPointDownloadHelperDelegate
 - (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel {
 //    NSLog(@"thread : %@, url : %@, 下载进度 +++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
-    NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
+    NSInteger index = [self fetchDownloadModelWithFilePath:downloadModel.filePath];
     if (index == -1) {
         return;
     }
@@ -102,7 +102,7 @@ MHOfflineBreakPointDownloadManagerDelegate
 }
 
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error {
-    NSInteger index = [self fetchDownloadModelWithFileUrl:downloadModel.fileUrl];
+    NSInteger index = [self fetchDownloadModelWithFilePath:downloadModel.filePath];
     if (index == -1) {
         return;
     }
@@ -118,11 +118,11 @@ MHOfflineBreakPointDownloadManagerDelegate
     }
 }
 
-- (NSInteger )fetchDownloadModelWithFileUrl:(NSString *)fileUrl {
+- (NSInteger )fetchDownloadModelWithFilePath:(NSString *)filePath {
     @synchronized(self.itemArray) {
         for (NSInteger i = 0; i < self.itemArray.count; i++) {
             MHDownloadModel *model = self.itemArray[i];
-            if ([model.fileUrl isEqualToString:fileUrl]) {
+            if ([model.filePath isEqualToString:filePath]) {
                 return i;
             }
         }
@@ -136,13 +136,13 @@ MHOfflineBreakPointDownloadManagerDelegate
         _itemArray = [NSMutableArray array];
         
         MHDownloadModel *fileDownloadModel = [MHDownloadModel new];
-        fileDownloadModel.fileUrl = kFileUrl;
+        fileDownloadModel.filePath = kFileUrl;
         
         MHDownloadModel *gifDownloadModel = [MHDownloadModel new];
-        gifDownloadModel.fileUrl = kGifUrl;
+        gifDownloadModel.filePath = kGifUrl;
         
         MHDownloadModel *wmvDownloadModel = [MHDownloadModel new];
-        wmvDownloadModel.fileUrl = KWMVUrl;
+        wmvDownloadModel.filePath = KWMVUrl;
         
         [_itemArray addObjectsFromArray:@[fileDownloadModel, gifDownloadModel, wmvDownloadModel]];
     }

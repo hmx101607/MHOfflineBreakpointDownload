@@ -18,8 +18,12 @@ typedef NS_ENUM(NSInteger, MHDownloadStatus) {
 
 @interface MHDownloadModel : NSObject
 
+//1.创建表：主键序列，文件名称，文件路径，总大小，已经下载大小（可选），下载状态（正在下载，暂停）
+
+/** 文件id */
+@property (assign, nonatomic) NSInteger fileId;
 /** 文件地址 */
-@property (strong, nonatomic) NSString *fileUrl;
+@property (strong, nonatomic) NSString *filePath;
 /** 文件名称 */
 @property (strong, nonatomic) NSString *fileName;
 /** 总大小 */

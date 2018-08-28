@@ -14,15 +14,18 @@
 		9368D7A2212FB8510090B88B /* MHDownloadListItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7A0212FB8510090B88B /* MHDownloadListItemTableViewCell.m */; };
 		9368D7A3212FB8510090B88B /* MHDownloadListItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9368D7A1212FB8510090B88B /* MHDownloadListItemTableViewCell.xib */; };
 		9368D7A9213183070090B88B /* MHDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7A8213183070090B88B /* MHDownloadModel.m */; };
+		9368D7B12134D9470090B88B /* MHFileDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7B02134D9470090B88B /* MHFileDatabase.m */; };
 		93A4F37B1ED7D6C300CA88E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37A1ED7D6C300CA88E9 /* main.m */; };
 		93A4F37E1ED7D6C300CA88E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37D1ED7D6C300CA88E9 /* AppDelegate.m */; };
 		93A4F3811ED7D6C300CA88E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F3801ED7D6C300CA88E9 /* ViewController.m */; };
 		93A4F3841ED7D6C300CA88E9 /* ViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93A4F3821ED7D6C300CA88E9 /* ViewController.storyboard */; };
 		93A4F3861ED7D6C300CA88E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93A4F3851ED7D6C300CA88E9 /* Assets.xcassets */; };
 		93A4F3891ED7D6C300CA88E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93A4F3871ED7D6C300CA88E9 /* LaunchScreen.storyboard */; };
+		D395277FA03671848718A0C4 /* libPods-OfflineBreakpointDownload.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F594896248D2B02912180DF0 /* libPods-OfflineBreakpointDownload.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		670DA939917C9339CE8FF39A /* Pods-OfflineBreakpointDownload.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OfflineBreakpointDownload.release.xcconfig"; path = "Pods/Target Support Files/Pods-OfflineBreakpointDownload/Pods-OfflineBreakpointDownload.release.xcconfig"; sourceTree = "<group>"; };
 		930C1A1C212BC4ED0084498E /* MHURLSessionTaskOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHURLSessionTaskOperation.m; sourceTree = "<group>"; };
 		930C1A1D212BC4ED0084498E /* MHURLSessionTaskOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHURLSessionTaskOperation.h; sourceTree = "<group>"; };
 		930C1A23212BEA040084498E /* MHHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHHomeViewController.h; sourceTree = "<group>"; };
@@ -36,6 +39,8 @@
 		9368D7A1212FB8510090B88B /* MHDownloadListItemTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MHDownloadListItemTableViewCell.xib; sourceTree = "<group>"; };
 		9368D7A7213183070090B88B /* MHDownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHDownloadModel.h; sourceTree = "<group>"; };
 		9368D7A8213183070090B88B /* MHDownloadModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHDownloadModel.m; sourceTree = "<group>"; };
+		9368D7AF2134D9470090B88B /* MHFileDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHFileDatabase.h; sourceTree = "<group>"; };
+		9368D7B02134D9470090B88B /* MHFileDatabase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHFileDatabase.m; sourceTree = "<group>"; };
 		93A4F3761ED7D6C300CA88E9 /* OfflineBreakpointDownload.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineBreakpointDownload.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A4F37A1ED7D6C300CA88E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		93A4F37C1ED7D6C300CA88E9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -46,6 +51,8 @@
 		93A4F3851ED7D6C300CA88E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93A4F3881ED7D6C300CA88E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		93A4F38A1ED7D6C300CA88E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E956423F1FB469BE8CFB7BC6 /* Pods-OfflineBreakpointDownload.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OfflineBreakpointDownload.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OfflineBreakpointDownload/Pods-OfflineBreakpointDownload.debug.xcconfig"; sourceTree = "<group>"; };
+		F594896248D2B02912180DF0 /* libPods-OfflineBreakpointDownload.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OfflineBreakpointDownload.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,12 +60,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D395277FA03671848718A0C4 /* libPods-OfflineBreakpointDownload.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18191E59B35A353FE3FAD3CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F594896248D2B02912180DF0 /* libPods-OfflineBreakpointDownload.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9314BBA51ED812F700127E1A /* OfflineBreakPointDownload */ = {
 			isa = PBXGroup;
 			children = (
@@ -72,11 +88,29 @@
 			path = OfflineBreakPointDownload;
 			sourceTree = "<group>";
 		};
+		9368D7AD21343F360090B88B /* util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		9368D7AE2134D91F0090B88B /* model */ = {
+			isa = PBXGroup;
+			children = (
+				9368D7AF2134D9470090B88B /* MHFileDatabase.h */,
+				9368D7B02134D9470090B88B /* MHFileDatabase.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		93A4F36D1ED7D6C300CA88E9 = {
 			isa = PBXGroup;
 			children = (
 				93A4F3781ED7D6C300CA88E9 /* OfflineBreakpointDownload */,
 				93A4F3771ED7D6C300CA88E9 /* Products */,
+				D127B21349D32581752D4D28 /* Pods */,
+				18191E59B35A353FE3FAD3CD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +125,8 @@
 		93A4F3781ED7D6C300CA88E9 /* OfflineBreakpointDownload */ = {
 			isa = PBXGroup;
 			children = (
+				9368D7AE2134D91F0090B88B /* model */,
+				9368D7AD21343F360090B88B /* util */,
 				9314BBA51ED812F700127E1A /* OfflineBreakPointDownload */,
 				93A4F37C1ED7D6C300CA88E9 /* AppDelegate.h */,
 				93A4F37D1ED7D6C300CA88E9 /* AppDelegate.m */,
@@ -120,6 +156,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D127B21349D32581752D4D28 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E956423F1FB469BE8CFB7BC6 /* Pods-OfflineBreakpointDownload.debug.xcconfig */,
+				670DA939917C9339CE8FF39A /* Pods-OfflineBreakpointDownload.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -127,9 +172,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 93A4F38D1ED7D6C300CA88E9 /* Build configuration list for PBXNativeTarget "OfflineBreakpointDownload" */;
 			buildPhases = (
+				03C2746FCAD65D3E0EA5E76B /* [CP] Check Pods Manifest.lock */,
 				93A4F3721ED7D6C300CA88E9 /* Sources */,
 				93A4F3731ED7D6C300CA88E9 /* Frameworks */,
 				93A4F3741ED7D6C300CA88E9 /* Resources */,
+				03AFA3A0E9201D02D7F3DF5C /* [CP] Embed Pods Frameworks */,
+				D65D0317E8DD179A43856D41 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -187,6 +235,57 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		03AFA3A0E9201D02D7F3DF5C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OfflineBreakpointDownload/Pods-OfflineBreakpointDownload-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		03C2746FCAD65D3E0EA5E76B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OfflineBreakpointDownload-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D65D0317E8DD179A43856D41 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OfflineBreakpointDownload/Pods-OfflineBreakpointDownload-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		93A4F3721ED7D6C300CA88E9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -201,6 +300,7 @@
 				9368D7A9213183070090B88B /* MHDownloadModel.m in Sources */,
 				93A4F37B1ED7D6C300CA88E9 /* main.m in Sources */,
 				930C1A25212BEA040084498E /* MHHomeViewController.m in Sources */,
+				9368D7B12134D9470090B88B /* MHFileDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +418,7 @@
 		};
 		93A4F38E1ED7D6C300CA88E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E956423F1FB469BE8CFB7BC6 /* Pods-OfflineBreakpointDownload.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
@@ -331,6 +432,7 @@
 		};
 		93A4F38F1ED7D6C300CA88E9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 670DA939917C9339CE8FF39A /* Pods-OfflineBreakpointDownload.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";

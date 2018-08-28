@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "MHOfflineBreakPointDownloadManager.h"
+#import "MHFileDatabase.h"
 
 #define kFileUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/video.mp4"
 #define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
@@ -67,14 +68,27 @@ MHOfflineBreakPointDownloadManagerDelegate
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error {
     CGFloat progress = downloadModel.currentSize * 1.0 / downloadModel.totalSize * 1.0;
     self.progressView.progress = progress;
-    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, progress);
+    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.filePath.lastPathComponent, progress);
 }
 
 - (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel { 
     
 }
 
+- (IBAction)createTableView:(id)sender {
+//    [MHFileDatabase  createTable];
+}
 
+- (IBAction)query:(id)sender {
+    NSArray *list = [[MHFileDatabase shareInstance] queryAllDownloading];
+    [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        MHDownloadModel *model = obj;
+    }];
+}
+
+- (IBAction)insert:(id)sender {
+    [[MHFileDatabase shareInstance] insertFileWithFileName:@"video.mp4" filePath:@"123" fileTotalSize:0.5];
+}
 
 @end
 

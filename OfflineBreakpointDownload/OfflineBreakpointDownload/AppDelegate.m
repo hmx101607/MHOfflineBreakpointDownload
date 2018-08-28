@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MHHomeViewController.h"
+#import "MHFileDatabase.h"
 
 @interface AppDelegate ()
 
@@ -20,6 +21,8 @@
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
+    
+    [[MHFileDatabase shareInstance] createTable];
     
     MHHomeViewController *homeVC = [MHHomeViewController new];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:homeVC];

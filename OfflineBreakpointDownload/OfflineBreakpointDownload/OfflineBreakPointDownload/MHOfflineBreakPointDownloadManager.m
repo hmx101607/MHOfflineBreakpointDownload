@@ -42,12 +42,11 @@
 - (void)addDownloadQueue:(NSString *)fileUrl {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
-        [self goOnDownLoadWithUrl:downloadModel.fileUrl];
+        [self goOnDownLoadWithUrl:downloadModel.filePath];
     } else {
         downloadModel = [MHDownloadModel new];
-        downloadModel.fileUrl = fileUrl;
+        downloadModel.filePath = fileUrl;
         [self.downloadTasks addObject:downloadModel];
-        
         [self startDownLoadWithUrl:fileUrl];
     }
 }
@@ -168,7 +167,7 @@ didCompleteWithError:(nullable NSError *)error{
     
     //从磁盘中删除该条数据
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtPath:[self getFilePathWithUrl:downloadModel.fileUrl.lastPathComponent] error:&error];
+    [[NSFileManager defaultManager] removeItemAtPath:[self getFilePathWithUrl:downloadModel.filePath.lastPathComponent] error:&error];
     if (error) {
         NSLog(@"移除失败  : %@", error);
     }
@@ -186,10 +185,10 @@ didCompleteWithError:(nullable NSError *)error{
     [task resume];
 }
 
-- (MHDownloadModel *)fetchDownloadModelWithFileUrl:(NSString *)fileUrl {
+- (MHDownloadModel *)fetchDownloadModelWithFileUrl:(NSString *)filePath {
     @synchronized(self.downloadTasks) {
         for (MHDownloadModel *model in self.downloadTasks) {
-            if ([model.fileUrl isEqualToString:fileUrl]) {
+            if ([model.filePath isEqualToString:filePath]) {
                 return model;
             }
         }
@@ -197,10 +196,10 @@ didCompleteWithError:(nullable NSError *)error{
     return nil;;
 }
 
-- (void)removeDownloadModelWithFileUrl:(NSString *)fileUrl {
+- (void)removeDownloadModelWithFileUrl:(NSString *)filePath {
     @synchronized(self.downloadTasks) {
         for (MHDownloadModel *model in self.downloadTasks) {
-            if ([model.fileUrl isEqualToString:fileUrl]) {
+            if ([model.filePath isEqualToString:filePath]) {
                 [self.downloadTasks removeObject:model];
                 break;
             }

@@ -28,7 +28,7 @@
 
 - (void)setDownloadModel:(MHDownloadModel *)downloadModel {
     _downloadModel = downloadModel;
-    self.titleLabel.text = downloadModel.fileUrl.lastPathComponent;
+    self.titleLabel.text = downloadModel.filePath.lastPathComponent;
     CGFloat progress = 0;
     if (downloadModel.totalSize != 0) {
         progress = downloadModel.currentSize*1.0 / downloadModel.totalSize * 1.0f;

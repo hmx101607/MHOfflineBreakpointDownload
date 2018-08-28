@@ -62,22 +62,49 @@
                                     <action selector="deleteFileAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pFj-eA-jr8"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehx-Gb-oX9">
+                                <rect key="frame" x="149" y="482" width="77" height="30"/>
+                                <state key="normal" title="创建数据库"/>
+                                <connections>
+                                    <action selector="createTableView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SRr-2k-qv2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ShZ-VU-oDY">
+                                <rect key="frame" x="241" y="482" width="31" height="30"/>
+                                <state key="normal" title="查询"/>
+                                <connections>
+                                    <action selector="query:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Erb-4X-heL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E8h-oY-LXz">
+                                <rect key="frame" x="103" y="482" width="31" height="30"/>
+                                <state key="normal" title="插入"/>
+                                <connections>
+                                    <action selector="insert:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dAk-2y-hx6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="zW0-FD-BsV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1Jm-Vc-fMf"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AfC-Vi-syO"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BuO-po-lDp"/>
+                            <constraint firstItem="ShZ-VU-oDY" firstAttribute="leading" secondItem="Ehx-Gb-oX9" secondAttribute="trailing" constant="15" id="CmK-Gr-d7k"/>
                             <constraint firstItem="Tpz-sl-Pcr" firstAttribute="top" secondItem="NBf-5M-XTb" secondAttribute="bottom" constant="50" id="HqM-Ru-FPz"/>
                             <constraint firstItem="nrA-iT-HJP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MOV-Wn-l2X"/>
                             <constraint firstItem="zW0-FD-BsV" firstAttribute="top" secondItem="hGy-bx-aVN" secondAttribute="bottom" constant="50" id="RwJ-Oz-4wX"/>
+                            <constraint firstItem="ShZ-VU-oDY" firstAttribute="centerY" secondItem="Ehx-Gb-oX9" secondAttribute="centerY" id="T8M-Ca-sQE"/>
                             <constraint firstItem="hGy-bx-aVN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="ajp-Mf-d5V"/>
+                            <constraint firstItem="Ehx-Gb-oX9" firstAttribute="leading" secondItem="E8h-oY-LXz" secondAttribute="trailing" constant="15" id="bBo-Sp-DYF"/>
                             <constraint firstItem="nrA-iT-HJP" firstAttribute="top" secondItem="lNs-Op-yO4" secondAttribute="bottom" constant="50" id="bsI-hR-sUw"/>
+                            <constraint firstItem="Ehx-Gb-oX9" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="chM-lB-9pU"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="top" secondItem="nrA-iT-HJP" secondAttribute="bottom" constant="50" id="d5i-I5-pTI"/>
                             <constraint firstAttribute="trailing" secondItem="hGy-bx-aVN" secondAttribute="trailing" constant="50" id="dYC-r4-F7A"/>
                             <constraint firstItem="lNs-Op-yO4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gxT-dD-vIK"/>
                             <constraint firstItem="Tpz-sl-Pcr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hgT-dc-4m2"/>
                             <constraint firstItem="hGy-bx-aVN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="50" id="iCI-TP-gtG"/>
+                            <constraint firstItem="Ehx-Gb-oX9" firstAttribute="top" secondItem="Tpz-sl-Pcr" secondAttribute="bottom" constant="40" id="jBm-dt-iHh"/>
+                            <constraint firstItem="E8h-oY-LXz" firstAttribute="centerY" secondItem="Ehx-Gb-oX9" secondAttribute="centerY" id="sf9-Si-5uR"/>
                             <constraint firstItem="NBf-5M-XTb" firstAttribute="top" secondItem="nrA-iT-HJP" secondAttribute="bottom" constant="50" id="uTb-b7-ynV"/>
                             <constraint firstItem="lNs-Op-yO4" firstAttribute="top" secondItem="zW0-FD-BsV" secondAttribute="bottom" constant="50" id="wdE-ty-t7A"/>
                         </constraints>

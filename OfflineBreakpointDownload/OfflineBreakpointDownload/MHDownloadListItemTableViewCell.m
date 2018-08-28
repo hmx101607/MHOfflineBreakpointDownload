@@ -34,8 +34,7 @@
         progress = downloadModel.currentSize*1.0 / downloadModel.totalSize * 1.0f;
     }
     self.progressView.progress = progress;
-    self.progressLabel.text = [NSString stringWithFormat:@"%f%%", progress*100];
-    NSLog(@"downloadStatus : %ld", downloadModel.downloadStatus);
+    self.progressLabel.textColor = [UIColor blackColor];
     switch (downloadModel.downloadStatus) {
         case MHDownloadStatusDownloadWait:
         {
@@ -52,6 +51,7 @@
         case MHDownloadStatusDownloading:
         {
             [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            self.progressLabel.text = [NSString stringWithFormat:@"正在下载：%.0f%%", progress*100];
             break;
         }
         case MHDownloadStatusDownloadComplete:
@@ -60,7 +60,9 @@
         }
         case MHDownloadStatusDownloadFail:
         {
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             self.progressLabel.text = @"失败";
+            self.progressLabel.textColor = [UIColor redColor];
             break;
         }
         case MHDownloadStatusDownloadCancel:
@@ -103,6 +105,7 @@
         }
         case MHDownloadStatusDownloadFail:
         {
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
                 [self.delegate startDownloadWithDownloadModel:self.downloadModel];
             }

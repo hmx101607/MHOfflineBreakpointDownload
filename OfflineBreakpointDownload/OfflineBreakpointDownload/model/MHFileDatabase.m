@@ -45,13 +45,9 @@
 }
 
 /**
- 只执行一次
+ 只执行一次，
  */
 - (BOOL)createTable {
-//    NSString *sqliteName = [NSString stringWithFormat:@"%@.sqlite", NSStringFromClass([self class])];
-//    if ([MHFileDatabase isFileExist:sqliteName]) {
-//        return YES;
-//    }
     __block BOOL result = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -111,10 +107,22 @@
 }
 
 - (MHDownloadModel *)queryModelWitFileName:(NSString *)fileName {
+    return [self queryWithFileName:fileName].firstObject;
+}
+
+- (NSArray *)queryAllDownloading {
+    return [self queryWithFileName:@""];
+}
+
+- (NSArray *)queryWithFileName:(NSString *)fileName {
     __block FMResultSet *results;
     __block NSMutableArray *list = [NSMutableArray array];
     [[MHFileDatabase shareInstance].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        results = [db executeQueryWithFormat:@"select * from download_file where file_name=%@;", fileName];
+        if (fileName && fileName.length > 0) {
+            results = [db executeQueryWithFormat:@"select * from download_file where file_name=%@;", fileName];
+        } else {
+            results = [db executeQueryWithFormat:@"select * from download_file"];
+        }
     }];
     while ([results  next]) {
         MHDownloadModel *downloadModel = [MHDownloadModel new];
@@ -135,37 +143,7 @@
         downloadModel.filePath = [results objectForColumn:@"file_path"];
         downloadModel.downloadStatus = [results intForColumn:@"download_status"];
         [list addObject:downloadModel];
-        break;
     }
-    return list.firstObject;
-}
-
-- (NSArray *)queryAllDownloading {
-    __block NSMutableArray *list = [NSMutableArray array];
-    [[MHFileDatabase shareInstance].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        FMResultSet *results = [db executeQuery:@"select * from download_file;"];
-        while ([results  next])
-        {
-            MHDownloadModel *downloadModel = [MHDownloadModel new];
-            downloadModel.fileName = [results objectForColumn:@"file_name"];
-            downloadModel.totalSize = [results doubleForColumn:@"file_total_size"];
-            //直接根据路径查询文件是否存在：1.存在：a: 获取大小是否对于总大小 b.不一致，说明为下载完，一直则直接删除数据库中该条数据
-            //2.不存在：启用下载
-            if ([MHFileDatabase isFileExist:downloadModel.fileName]) {
-                NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[MHFileDatabase cacheDocumentPathWithFileName:downloadModel.fileName] error:nil];
-                NSInteger currentSize = [dic[@"NSFileSize"] integerValue];
-                if (currentSize >= downloadModel.totalSize) {
-                    //删除该条数据
-                    [self deleteFileWithFileName:downloadModel.fileName];
-                    continue;
-                }
-                downloadModel.currentSize = currentSize;
-            }
-            downloadModel.filePath = [results objectForColumn:@"file_path"];
-            downloadModel.downloadStatus = [results intForColumn:@"download_status"];
-            [list addObject:downloadModel];
-        }
-    }];
     return list;
 }
 

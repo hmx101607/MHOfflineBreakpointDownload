@@ -15,7 +15,7 @@
 + (instancetype)shareInstance;
 
 /**
- 只执行一次
+ 只执行一次,在didFinishLaunchingWithOptions方法中执行
  */
 - (BOOL)createTable;
 

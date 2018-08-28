@@ -9,19 +9,18 @@
 #import "MHSingleOperationViewController.h"
 #import "MHDownloadListItemTableViewCell.h"
 #import "MHOfflineBreakPointDownloadManager.h"
+#import "MHFileDatabase.h"
+#import "MHSourceListTableViewController.h"
 
 static NSString *const kDownloadCellIdentifier = @"kDownloadCellIdentifier";
-
-#define kFileUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/video.mp4"
-#define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
-#define KWMVUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/1102.wmv"
 
 @interface MHSingleOperationViewController ()
 <
 UITableViewDelegate,
 UITableViewDataSource,
 MHDownloadListItemTableViewCellDelegate,
-MHOfflineBreakPointDownloadManagerDelegate
+MHOfflineBreakPointDownloadManagerDelegate,
+MHSourceListTableViewControllerDelegate
 >
 /** <##> */
 @property (strong, nonatomic) UITableView *tableView;
@@ -38,6 +37,17 @@ MHOfflineBreakPointDownloadManagerDelegate
     [MHOfflineBreakPointDownloadManager shareDownloadInstance].delegate = self;
 
     [self setupView];
+    [self configRightNavigationBar];
+    
+    NSArray *list = [[MHFileDatabase shareInstance] queryAllDownloading];
+    [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        MHDownloadModel *downloadModel = obj;
+        if (downloadModel.downloadStatus == MHDownloadStatusDownloading) {
+            [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:downloadModel.filePath];
+        }
+    }];
+    [self.itemArray addObjectsFromArray:list];
+    [self.tableView reloadData];
 }
 
 - (void)setupView {
@@ -49,6 +59,33 @@ MHOfflineBreakPointDownloadManagerDelegate
     tableView.rowHeight = 100.f;
     [tableView registerNib:[UINib nibWithNibName:NSStringFromClass([MHDownloadListItemTableViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([MHDownloadListItemTableViewCell class])];
     tableView.tableFooterView = [UIView new];
+}
+
+- (void)configRightNavigationBar {
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加文件" style:UIBarButtonItemStylePlain target:self action:@selector(clickAction:)];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+}
+
+- (void)clickAction:(UIButton *)sender {
+    MHSourceListTableViewController *sourceListVC = [MHSourceListTableViewController new];
+    sourceListVC.delegate = self;
+    [self.navigationController pushViewController:sourceListVC animated:YES];
+
+}
+
+- (void)didSelecteDownloadModel:(MHDownloadModel *)downloadModel {
+    __block BOOL exit = NO;
+    [self.itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        MHDownloadModel *model = obj;
+        if ([model.filePath isEqualToString:downloadModel.filePath]) {
+            exit = YES;
+            *stop = YES;
+        }
+    }];
+    if (!exit) {
+        [self.itemArray addObject:downloadModel];
+    }
+    [self.tableView reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -84,7 +121,6 @@ MHOfflineBreakPointDownloadManagerDelegate
 
 #pragma mark - Delegate MHOfflineBreakPointDownloadHelperDelegate
 - (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel {
-//    NSLog(@"thread : %@, url : %@, 下载进度 +++++downloadModel.progress : %.2f", [NSThread currentThread], downloadModel.fileUrl.lastPathComponent, downloadModel.currentSize*1.0 /downloadModel.totalSize*1.0);
     NSInteger index = [self fetchDownloadModelWithFilePath:downloadModel.filePath];
     if (index == -1) {
         return;
@@ -130,21 +166,9 @@ MHOfflineBreakPointDownloadManagerDelegate
     return -1;
 }
 
-
 - (NSMutableArray *)itemArray {
     if (!_itemArray) {
         _itemArray = [NSMutableArray array];
-        
-        MHDownloadModel *fileDownloadModel = [MHDownloadModel new];
-        fileDownloadModel.filePath = kFileUrl;
-        
-        MHDownloadModel *gifDownloadModel = [MHDownloadModel new];
-        gifDownloadModel.filePath = kGifUrl;
-        
-        MHDownloadModel *wmvDownloadModel = [MHDownloadModel new];
-        wmvDownloadModel.filePath = KWMVUrl;
-        
-        [_itemArray addObjectsFromArray:@[fileDownloadModel, gifDownloadModel, wmvDownloadModel]];
     }
     return _itemArray;
 }

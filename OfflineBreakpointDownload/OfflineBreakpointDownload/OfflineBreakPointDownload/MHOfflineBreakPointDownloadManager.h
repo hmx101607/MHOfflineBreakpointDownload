@@ -46,8 +46,5 @@
 /** 取消下载 */
 - (void)cancelDownLoadWithUrl:(NSString *)url;
 
-/** 继续下载 */
-- (void)goOnDownLoadWithUrl:(NSString *)url;
-
 
 @end

@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, MHDownloadStatus) {
 
 /** 文件id */
 @property (assign, nonatomic) NSInteger fileId;
-/** 文件地址 */
+/** 文件地址(原始下载地址) */
 @property (strong, nonatomic) NSString *filePath;
 /** 文件名称 */
 @property (strong, nonatomic) NSString *fileName;

@@ -55,7 +55,7 @@
         [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:fileUrl.lastPathComponent downloadStatus:MHDownloadStatusDownloading];
     } else {
         //插入数据，记录下载文件
-        [[MHFileDatabase shareInstance] insertFileWithFileName:fileUrl.lastPathComponent filePath:[self getFilePathWithUrl:fileUrl] fileTotalSize:0];
+        [[MHFileDatabase shareInstance] insertFileWithFileName:fileUrl.lastPathComponent filePath:fileUrl fileTotalSize:0];
     }
     downloadModel = [MHDownloadModel new];
     downloadModel.filePath = fileUrl;
@@ -229,6 +229,7 @@ didCompleteWithError:(nullable NSError *)error{
             downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
             [self suspendOrFialTask:url suspend:NO];
         }
+        NSLog(@"error : %@", error);
     } else {
         downloadModel.downloadStatus = MHDownloadStatusDownloadComplete;
         [self completeTask:url];

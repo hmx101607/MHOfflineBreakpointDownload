@@ -14,11 +14,6 @@
 #define kGifUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/scrollviewNest.gif"
 #define KWMVUrl @"http://7qnbrb.com1.z0.glb.clouddn.com/1102.wmv"
 
-typedef struct MYStruct {
-    int a;
-    int b;
-    
-}myStruct;
 
 @interface ViewController ()
 <
@@ -33,10 +28,13 @@ MHOfflineBreakPointDownloadManagerDelegate
 
 @implementation ViewController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [MHOfflineBreakPointDownloadManager shareDownloadInstance].delegate = self;
+}
 
 - (IBAction)startAction:(id)sender {
     
-    [MHOfflineBreakPointDownloadManager shareDownloadInstance].delegate = self;
     [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:kFileUrl];
 }
 
@@ -49,7 +47,7 @@ MHOfflineBreakPointDownloadManagerDelegate
 }
 
 - (IBAction)goOnAction:(id)sender {
-    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] goOnDownLoadWithUrl:kFileUrl];
+    [[MHOfflineBreakPointDownloadManager shareDownloadInstance] addDownloadQueue:kFileUrl];
 }
 
 - (IBAction)deleteFileAction:(id)sender {
@@ -64,15 +62,13 @@ MHOfflineBreakPointDownloadManagerDelegate
     return path;
 }
 
-
 - (void)downloadCompletionWithDownloadModel:(MHDownloadModel *)downloadModel error:(NSError *)error {
-    CGFloat progress = downloadModel.currentSize * 1.0 / downloadModel.totalSize * 1.0;
-    self.progressView.progress = progress;
-    NSLog(@"thread : %@, url : %@, 下载进度 --- %.2f", [NSThread currentThread], downloadModel.filePath.lastPathComponent, progress);
+    NSLog(@"error : %@", error.domain);
 }
 
-- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel { 
-    
+- (void)downloadProgressWithDownloadModel:(MHDownloadModel *)downloadModel {
+    CGFloat progress = downloadModel.currentSize * 1.0 / downloadModel.totalSize * 1.0;
+    self.progressView.progress = progress;
 }
 
 - (IBAction)createTableView:(id)sender {

@@ -38,19 +38,19 @@
     switch (downloadModel.downloadStatus) {
         case MHDownloadStatusDownloadWait:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             self.progressLabel.text = @"等待下载";
             break;
         }
         case MHDownloadStatusDownloadSuspend:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             self.progressLabel.text = @"暂停";
             break;
         }
         case MHDownloadStatusDownloading:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             self.progressLabel.text = [NSString stringWithFormat:@"正在下载：%.0f%%", progress*100];
             break;
         }
@@ -60,7 +60,7 @@
         }
         case MHDownloadStatusDownloadFail:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             self.progressLabel.text = @"失败";
             self.progressLabel.textColor = [UIColor redColor];
             break;
@@ -77,7 +77,7 @@
     switch (self.downloadModel.downloadStatus) {
         case MHDownloadStatusDownloadWait:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
                 [self.delegate startDownloadWithDownloadModel:self.downloadModel];
             }
@@ -85,7 +85,7 @@
         }
         case MHDownloadStatusDownloadSuspend:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
                 [self.delegate startDownloadWithDownloadModel:self.downloadModel];
             }
@@ -93,7 +93,7 @@
         }
         case MHDownloadStatusDownloading:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(suspendDownloadWithDownloadModel:)]) {
                 [self.delegate suspendDownloadWithDownloadModel:self.downloadModel];
             }
@@ -105,7 +105,7 @@
         }
         case MHDownloadStatusDownloadFail:
         {
-            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
             if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
                 [self.delegate startDownloadWithDownloadModel:self.downloadModel];
             }

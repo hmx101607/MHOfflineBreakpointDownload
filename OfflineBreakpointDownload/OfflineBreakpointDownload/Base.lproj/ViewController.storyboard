@@ -52,7 +52,7 @@
                                 <rect key="frame" x="156" y="332" width="62" height="30"/>
                                 <state key="normal" title="继续下载"/>
                                 <connections>
-                                    <action selector="goOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l9I-T4-Gz4"/>
+                                    <action selector="goOnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vxe-h6-aj9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpz-sl-Pcr">

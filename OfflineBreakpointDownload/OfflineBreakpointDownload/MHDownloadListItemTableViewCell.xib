@@ -53,11 +53,7 @@
                         </constraints>
                     </progressView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bIX-ky-UG5">
-                        <rect key="frame" x="274.5" y="128" width="35.5" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="17" id="7d0-v5-P3d"/>
-                            <constraint firstAttribute="width" constant="35.5" id="gAl-Ld-bXg"/>
-                        </constraints>
+                        <rect key="frame" x="10" y="11" width="35.5" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -67,14 +63,14 @@
                     <constraint firstAttribute="trailing" secondItem="MId-uK-wcF" secondAttribute="trailing" constant="60" id="Ecw-fK-p2T"/>
                     <constraint firstItem="HJc-Kr-phV" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="FAT-mr-cTg"/>
                     <constraint firstItem="RUs-N7-F5a" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="G2e-cO-sgp"/>
+                    <constraint firstItem="bIX-ky-UG5" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="RjF-Pg-aNj"/>
                     <constraint firstItem="HJc-Kr-phV" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Z63-cs-0kQ"/>
                     <constraint firstAttribute="trailing" secondItem="hr5-Oh-ZFV" secondAttribute="trailing" constant="10" id="cTM-5z-O9d"/>
-                    <constraint firstAttribute="trailing" secondItem="bIX-ky-UG5" secondAttribute="trailing" constant="10" id="gcc-oQ-kKc"/>
                     <constraint firstItem="hr5-Oh-ZFV" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="jTT-Kt-MV9"/>
                     <constraint firstItem="MId-uK-wcF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="kvM-S7-ogc"/>
-                    <constraint firstAttribute="bottom" secondItem="bIX-ky-UG5" secondAttribute="bottom" constant="10" id="m5p-Jt-fdg"/>
-                    <constraint firstItem="MId-uK-wcF" firstAttribute="centerY" secondItem="bIX-ky-UG5" secondAttribute="centerY" id="myQ-tE-I2w"/>
+                    <constraint firstAttribute="bottom" secondItem="MId-uK-wcF" secondAttribute="bottom" constant="17.5" id="vWI-uT-xOb"/>
                     <constraint firstItem="hr5-Oh-ZFV" firstAttribute="leading" secondItem="RUs-N7-F5a" secondAttribute="trailing" constant="10" id="vt3-ae-ugv"/>
+                    <constraint firstItem="bIX-ky-UG5" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="wZQ-CD-d9Q"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

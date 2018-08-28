@@ -8,6 +8,7 @@
 
 #import "MHOfflineBreakPointDownloadManager.h"
 #import "MHURLSessionTaskOperation.h"
+#import "MHFileDatabase.h"
 
 
 @interface MHOfflineBreakPointDownloadManager()
@@ -21,6 +22,8 @@
 @property (strong, nonatomic) NSMutableArray *downloadTasks;
 /** <##> */
 @property (assign, nonatomic) NSInteger maxConcurrentOperationCount;
+/** 是否正在下载 */
+@property (assign, nonatomic) BOOL downloading;
 
 @end
 
@@ -40,25 +43,34 @@
 }
 
 - (void)addDownloadQueue:(NSString *)fileUrl {
+    
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
-        [self goOnDownLoadWithUrl:downloadModel.filePath];
-    } else {
-        downloadModel = [MHDownloadModel new];
-        downloadModel.filePath = fileUrl;
-        [self.downloadTasks addObject:downloadModel];
-        [self startDownLoadWithUrl:fileUrl];
+        return;
     }
+    
+    MHDownloadModel *model = [[MHFileDatabase shareInstance] queryModelWitFileName:fileUrl.lastPathComponent];
+    if (model) {
+        //更新下载文件的状态
+        [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:fileUrl.lastPathComponent downloadStatus:MHDownloadStatusDownloading];
+    } else {
+        //插入数据，记录下载文件
+        [[MHFileDatabase shareInstance] insertFileWithFileName:fileUrl.lastPathComponent filePath:[self getFilePathWithUrl:fileUrl] fileTotalSize:0];
+    }
+    downloadModel = [MHDownloadModel new];
+    downloadModel.filePath = fileUrl;
+    [self.downloadTasks addObject:downloadModel];
+    [self startDownLoadWithUrl:fileUrl];
 }
 
 /** 开始下载 */
 - (void)startDownLoadWithUrl:(NSString *)url {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    downloadModel.downloadStatus = MHDownloadStatusDownloadWait;
     NSURLSessionDataTask *task = downloadModel.task;
     if (task && task.state == NSURLSessionTaskStateRunning) {
         return;
     }
-    task = [self downloadDataTaskWithUrl:url];
     __weak typeof(self) weakSelf = self;
     MHURLSessionTaskOperation *operation = [MHURLSessionTaskOperation operationWithURLSessionTask:nil sessionBlock:^NSURLSessionTask *{
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -84,8 +96,78 @@
     return dataTask;
 }
 
-#pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate ++++++++++++++++++++++++
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+/** 暂停下载 */
+- (void)suspendDownLoadWithUrl:(NSString *)url{
+    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    NSURLSessionDataTask *task = downloadModel.task;
+    if (!task || task.state == NSURLSessionTaskStateSuspended) {
+        return;
+    }
+    downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
+    [task cancel];
+    
+    /*
+    //从下载任务中移除
+    [self removeDownloadModelWithFileUrl:url];
+    //数据库中保留数据
+    //修改数据库改文件的下载状态
+    [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:url.lastPathComponent downloadStatus:MHDownloadStatusDownloadSuspend];
+    
+    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[self getFilePathWithUrl:url] error:nil];
+    [[MHFileDatabase shareInstance] updateDownloadFileCurrentSizeWithFileName:url.lastPathComponent fileCurrentSize:[dic[@"NSFileSize"] integerValue]];
+     */
+}
+
+/** 取消下载 */
+- (void)cancelDownLoadWithUrl:(NSString *)url {
+    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    NSURLSessionDataTask *task = downloadModel.task;
+    if (!task || task.state == NSURLSessionTaskStateCanceling) {
+        [self cancelTask:url];
+        return;
+    } else {
+    }
+    downloadModel.downloadStatus = MHDownloadStatusDownloadCancel;
+    [task cancel];
+    task = nil;
+    [self cancelTask:url];
+
+
+    
+    /*
+    //从下载任务中移除
+    [self removeDownloadModelWithFileUrl:url];
+    
+    //从数据库及文件中移除
+    [[MHFileDatabase shareInstance] deleteFileWithFileName:url.lastPathComponent];
+    
+    //从磁盘中删除该条数据
+    NSString *path = [self getFilePathWithUrl:downloadModel.filePath.lastPathComponent];
+    NSError *error;
+    if (path && path.length > 0) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    }
+    if (error) {
+        NSLog(@"移除失败  : %@", error);
+    }
+     */
+}
+
+/** 继续下载 */
+- (void)goOnDownLoadWithUrl:(NSString *)url{
+    MHDownloadModel *downloadModel = [MHDownloadModel new];
+    //更新下载文件的状态
+    [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:url.lastPathComponent downloadStatus:MHDownloadStatusDownloading];
+    
+    downloadModel.filePath = url;
+    [self.downloadTasks addObject:downloadModel];
+    [self startDownLoadWithUrl:url];
+}
+
+
+#pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate start ++++++++++++++++++++++++
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     NSLog(@"thread : %@, 开始下载 --- %s", [NSThread currentThread], __func__);
@@ -98,10 +180,15 @@ didReceiveResponse:(NSURLResponse *)response
     }
     downloadModel.handle = [NSFileHandle fileHandleForWritingAtPath:[self getFilePathWithUrl:url]];
     [downloadModel.handle seekToEndOfFile]; // 要插入的数据移动到最后
+    
+    //更新下载文件的总大小
+    [[MHFileDatabase shareInstance] updateDownloadFileTotalSizeWithFileName:url.lastPathComponent fileTotalSize:downloadModel.totalSize];
+    
     completionHandler (NSURLSessionResponseAllow);
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     NSString *url = dataTask.currentRequest.URL.absoluteString;
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
@@ -112,77 +199,75 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error{
     NSLog(@"thread : %@, 下载完成 --- %s", [NSThread currentThread], __func__);
     NSString *url = task.currentRequest.URL.absoluteString;
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
+    if (!downloadModel) {
+        return;
+    }
     [downloadModel.handle closeFile];
     downloadModel.handle = nil;
     if (error) {
-        if (downloadModel.downloadStatus != MHDownloadStatusDownloadSuspend) {
-            if ([error.userInfo[NSLocalizedDescriptionKey] isEqualToString:@"cancelled"]) {
-                downloadModel.downloadStatus = MHDownloadStatusDownloadCancel;
-            } else {
-                downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
+        if ([error.userInfo[NSLocalizedDescriptionKey] isEqualToString:@"cancelled"]) {
+            if (downloadModel.downloadStatus == MHDownloadStatusDownloadSuspend) {
+                [self suspendOrFialTask:url suspend:YES];
+            } else if (downloadModel.downloadStatus == MHDownloadStatusDownloadCancel) {
+                [self cancelTask:url];
             }
+        } else {
+            downloadModel.downloadStatus = MHDownloadStatusDownloadFail;
+            [self suspendOrFialTask:url suspend:NO];
         }
     } else {
         downloadModel.downloadStatus = MHDownloadStatusDownloadComplete;
+        [self completeTask:url];
     }
     if ([self.delegate respondsToSelector:@selector(downloadCompletionWithDownloadModel:error:)]) {
         [self.delegate downloadCompletionWithDownloadModel:downloadModel error:error];
     }
     [downloadModel.task cancel];
-    [self removeDownloadModelWithFileUrl:url];
+}
+#pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate end ++++++++++++++++++++++++
+- (void)completeTask:(NSString *)fileUrl {
+    [self removeDownloadModelWithFileUrl:fileUrl];
+    [[MHFileDatabase shareInstance] deleteFileWithFileName:fileUrl.lastPathComponent];
 }
 
-/** 暂停下载 */
-- (void)suspendDownLoadWithUrl:(NSString *)url{
-    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
-    NSURLSessionDataTask *task = downloadModel.task;
-    if (!task || task.state == NSURLSessionTaskStateSuspended) {
-        return;
-    }
-    downloadModel.downloadStatus = MHDownloadStatusDownloadSuspend;
-    [task cancel];
-    
+- (void)suspendOrFialTask:(NSString *)fileUrl suspend:(BOOL)suspend{
+    //从下载任务中移除
+    [self removeDownloadModelWithFileUrl:fileUrl];
     //数据库中保留数据
+    if (suspend) {
+        //修改数据库改文件的下载状态
+        [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:fileUrl.lastPathComponent downloadStatus:MHDownloadStatusDownloadSuspend];
+    } else {
+        //修改数据库改文件的下载状态
+        [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:fileUrl.lastPathComponent downloadStatus:MHDownloadStatusDownloadFail];
+    }
+    
+    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[self getFilePathWithUrl:fileUrl] error:nil];
+    [[MHFileDatabase shareInstance] updateDownloadFileCurrentSizeWithFileName:fileUrl.lastPathComponent fileCurrentSize:[dic[@"NSFileSize"] integerValue]];
 }
 
-/** 取消下载 */
-- (void)cancelDownLoadWithUrl:(NSString *)url {
-    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
-    NSURLSessionDataTask *task = downloadModel.task;
-    if (!task || task.state == NSURLSessionTaskStateCanceling) {
-        return;
-    }
-    [task cancel];
-    task = nil;
-    NSString *path = [self getFilePathWithUrl:url];
-    if (path && path.length > 0) {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-    }
+- (void)cancelTask:(NSString *)fileUrl {
+    //从下载任务中移除
+    [self removeDownloadModelWithFileUrl:fileUrl];
+    
     //从数据库及文件中移除
+    [[MHFileDatabase shareInstance] deleteFileWithFileName:fileUrl.lastPathComponent];
     
     //从磁盘中删除该条数据
+    NSString *path = [self getFilePathWithUrl:fileUrl.lastPathComponent];
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtPath:[self getFilePathWithUrl:downloadModel.filePath.lastPathComponent] error:&error];
+    if (path && path.length > 0) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    }
     if (error) {
         NSLog(@"移除失败  : %@", error);
     }
-    //从数据源中删除
-    [self removeDownloadModelWithFileUrl:url];
-}
-
-/** 继续下载 */
-- (void)goOnDownLoadWithUrl:(NSString *)url{
-    MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
-    NSURLSessionDataTask *task = downloadModel.task;
-    if (!task || task.state == NSURLSessionTaskStateRunning) {
-        return;
-    }
-    [task resume];
 }
 
 - (MHDownloadModel *)fetchDownloadModelWithFileUrl:(NSString *)filePath {
@@ -208,7 +293,7 @@ didCompleteWithError:(nullable NSError *)error{
 }
 
 - (NSString *)getFilePathWithUrl:(NSString *)url {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:url.lastPathComponent];
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:url.lastPathComponent];
     NSLog(@"path : %@", path);
     return path;
 }

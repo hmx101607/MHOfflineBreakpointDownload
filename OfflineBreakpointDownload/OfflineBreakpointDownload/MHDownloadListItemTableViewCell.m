@@ -37,6 +37,12 @@
     self.progressLabel.text = [NSString stringWithFormat:@"%f%%", progress*100];
     NSLog(@"downloadStatus : %ld", downloadModel.downloadStatus);
     switch (downloadModel.downloadStatus) {
+        case MHDownloadStatusDownloadWait:
+        {
+            [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
+            self.progressLabel.text = @"等待下载";
+            break;
+        }
         case MHDownloadStatusDownloadSuspend:
         {
             [self.operationBtn setImage:[UIImage imageNamed:@"suspend"] forState:UIControlStateNormal];
@@ -67,6 +73,14 @@
 
 - (IBAction)operationAction:(id)sender {
     switch (self.downloadModel.downloadStatus) {
+        case MHDownloadStatusDownloadWait:
+        {
+            [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            if ([self.delegate respondsToSelector:@selector(startDownloadWithDownloadModel:)]) {
+                [self.delegate startDownloadWithDownloadModel:self.downloadModel];
+            }
+            break;
+        }
         case MHDownloadStatusDownloadSuspend:
         {
             [self.operationBtn setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];

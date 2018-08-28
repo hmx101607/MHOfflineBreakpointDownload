@@ -41,6 +41,28 @@
 - (BOOL)updateDownloadStatusWithFileName:(NSString *)fileName
                           downloadStatus:(MHDownloadStatus )downloadStatus;
 
+
+/**
+ 更新文件总大小
+
+ @param fileName 文件名称
+ @param fileTotalSize 文件总大小
+ @return 返回是否成功
+ */
+- (BOOL)updateDownloadFileTotalSizeWithFileName:(NSString *)fileName
+                                  fileTotalSize:(NSInteger)fileTotalSize;
+
+
+/**
+ 更新当前下载的进度
+
+ @param fileName 文件名称
+ @param fileCurrentSize 当前下载的大小
+ @return 返回是否成功
+ */
+- (BOOL)updateDownloadFileCurrentSizeWithFileName:(NSString *)fileName
+                                  fileCurrentSize:(NSInteger)fileCurrentSize;
+
 /**
  删除数据
 
@@ -48,6 +70,15 @@
  @return 返回是否成功
  */
 - (BOOL)deleteFileWithFileName:(NSString *)fileName;
+
+
+/**
+ 根据文件名称，查询是否有某个文件
+
+ @param fileName 文件名称
+ @return 返回是否成功
+ */
+- (MHDownloadModel *)queryModelWitFileName:(NSString *)fileName;
 
 /**
  查询所有未完成下载的文件

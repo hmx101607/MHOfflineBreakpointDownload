@@ -16,11 +16,11 @@
  NSURLSessionDataDelegate
 >
 
-/** <##> */
+/** 队列 */
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
-/** <##> */
+/** 下载任务 */
 @property (strong, nonatomic) NSMutableArray *downloadTasks;
-/** <##> */
+/** 最大并发数 */
 @property (assign, nonatomic) NSInteger maxConcurrentOperationCount;
 /** 是否正在下载 */
 @property (assign, nonatomic) BOOL downloading;
@@ -42,13 +42,14 @@
     return downloadHelper;
 }
 
+#pragma mark - +++++++++++++++++++++ 事件操作 start ++++++++++++++++++++++++
+#pragma mark - 添加下载任务到队列中
 - (void)addDownloadQueue:(NSString *)fileUrl {
-    
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
         return;
     }
-    
+    //如果数据库中存在该文件，则表明仅仅只是由暂停或失败状态，重启下载（暂停 -> 正在下载）
     MHDownloadModel *model = [[MHFileDatabase shareInstance] queryModelWitFileName:fileUrl.lastPathComponent];
     if (model) {
         //更新下载文件的状态
@@ -63,7 +64,7 @@
     [self startDownLoadWithUrl:fileUrl];
 }
 
-/** 开始下载 */
+#pragma mark - 开始下载
 - (void)startDownLoadWithUrl:(NSString *)url {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     downloadModel.downloadStatus = MHDownloadStatusDownloadWait;
@@ -96,7 +97,6 @@
     return dataTask;
 }
 
-#pragma mark - +++++++++++++++++++++ 事件操作 start ++++++++++++++++++++++++
 #pragma mark - 暂停下载
 - (void)suspendDownLoadWithUrl:(NSString *)url{
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
@@ -123,16 +123,6 @@
     [self cancelTask:url];
 }
 
-#pragma mark - 继续下载
-- (void)goOnDownLoadWithUrl:(NSString *)url{
-    MHDownloadModel *downloadModel = [MHDownloadModel new];
-    //更新下载文件的状态
-    [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:url.lastPathComponent downloadStatus:MHDownloadStatusDownloading];
-    
-    downloadModel.filePath = url;
-    [self.downloadTasks addObject:downloadModel];
-    [self startDownLoadWithUrl:url];
-}
 #pragma mark - +++++++++++++++++++++ 事件操作 end ++++++++++++++++++++++++
 
 #pragma mark - Private Method
@@ -171,7 +161,6 @@
         NSLog(@"移除失败  : %@", error);
     }
 }
-
 
 #pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate start ++++++++++++++++++++++++
 - (void)URLSession:(NSURLSession *)session
@@ -241,6 +230,8 @@ didCompleteWithError:(nullable NSError *)error{
 }
 #pragma mark - +++++++++++++++++++++ NSURLSessionDataDelegate end ++++++++++++++++++++++++
 
+
+#pragma mark - 根据filePath获取model实体
 - (MHDownloadModel *)fetchDownloadModelWithFileUrl:(NSString *)filePath {
     @synchronized(self.downloadTasks) {
         for (MHDownloadModel *model in self.downloadTasks) {
@@ -252,6 +243,7 @@ didCompleteWithError:(nullable NSError *)error{
     return nil;;
 }
 
+#pragma mark - 根据filePath移除下载任务
 - (void)removeDownloadModelWithFileUrl:(NSString *)filePath {
     @synchronized(self.downloadTasks) {
         for (MHDownloadModel *model in self.downloadTasks) {

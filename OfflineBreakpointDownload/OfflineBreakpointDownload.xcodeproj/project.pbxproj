@@ -16,6 +16,7 @@
 		9368D7A9213183070090B88B /* MHDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7A8213183070090B88B /* MHDownloadModel.m */; };
 		9368D7B12134D9470090B88B /* MHFileDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7B02134D9470090B88B /* MHFileDatabase.m */; };
 		9368D7B421354F360090B88B /* MHSourceListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368D7B321354F360090B88B /* MHSourceListTableViewController.m */; };
+		938643C72135A5FE0039734C /* MHUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 938643C62135A5FE0039734C /* MHUtil.m */; };
 		93A4F37B1ED7D6C300CA88E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37A1ED7D6C300CA88E9 /* main.m */; };
 		93A4F37E1ED7D6C300CA88E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F37D1ED7D6C300CA88E9 /* AppDelegate.m */; };
 		93A4F3811ED7D6C300CA88E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A4F3801ED7D6C300CA88E9 /* ViewController.m */; };
@@ -44,6 +45,8 @@
 		9368D7B02134D9470090B88B /* MHFileDatabase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHFileDatabase.m; sourceTree = "<group>"; };
 		9368D7B221354F360090B88B /* MHSourceListTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHSourceListTableViewController.h; sourceTree = "<group>"; };
 		9368D7B321354F360090B88B /* MHSourceListTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHSourceListTableViewController.m; sourceTree = "<group>"; };
+		938643C52135A5FE0039734C /* MHUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MHUtil.h; sourceTree = "<group>"; };
+		938643C62135A5FE0039734C /* MHUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHUtil.m; sourceTree = "<group>"; };
 		93A4F3761ED7D6C300CA88E9 /* OfflineBreakpointDownload.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineBreakpointDownload.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A4F37A1ED7D6C300CA88E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		93A4F37C1ED7D6C300CA88E9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -94,6 +97,8 @@
 		9368D7AD21343F360090B88B /* util */ = {
 			isa = PBXGroup;
 			children = (
+				938643C52135A5FE0039734C /* MHUtil.h */,
+				938643C62135A5FE0039734C /* MHUtil.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -314,6 +319,7 @@
 			files = (
 				93A4F3811ED7D6C300CA88E9 /* ViewController.m in Sources */,
 				9314BBA81ED8135C00127E1A /* MHOfflineBreakPointDownloadManager.m in Sources */,
+				938643C72135A5FE0039734C /* MHUtil.m in Sources */,
 				930C1A1E212BC4ED0084498E /* MHURLSessionTaskOperation.m in Sources */,
 				9368D79E212FA5930090B88B /* MHSingleOperationViewController.m in Sources */,
 				93A4F37E1ED7D6C300CA88E9 /* AppDelegate.m in Sources */,

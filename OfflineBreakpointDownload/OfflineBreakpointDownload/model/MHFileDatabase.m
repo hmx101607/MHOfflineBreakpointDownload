@@ -8,6 +8,7 @@
 
 #import "MHFileDatabase.h"
 #import <FMDB.h>
+#import "MHUtil.h"
 
 /*
  表的正常操作：
@@ -38,7 +39,7 @@
     dispatch_once(&onceToken, ^{
         fileDatabase = [MHFileDatabase new];
         NSString *sqliteName = [NSString stringWithFormat:@"%@.sqlite", NSStringFromClass([self class])];
-        NSString *fileName = [self cacheDocumentPathWithFileName:sqliteName];
+        NSString *fileName = [MHUtil cacheDocumentPathWithFileName:sqliteName];
         NSLog(@"fileName : %@", fileName);
         fileDatabase.databaseQueue = [FMDatabaseQueue databaseQueueWithPath:fileName];
     });
@@ -131,8 +132,8 @@
         downloadModel.totalSize = [results doubleForColumn:@"file_total_size"];
         //直接根据路径查询文件是否存在：1.存在：a: 获取大小是否对于总大小 b.不一致，说明为下载完，一直则直接删除数据库中该条数据
         //2.不存在：启用下载
-        if ([MHFileDatabase isFileExist:downloadModel.fileName]) {
-            NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[MHFileDatabase cacheDocumentPathWithFileName:downloadModel.fileName] error:nil];
+        if ([MHUtil isFileExist:downloadModel.fileName]) {
+            NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[MHUtil cacheDocumentPathWithFileName:downloadModel.fileName] error:nil];
             NSInteger currentSize = [dic[@"NSFileSize"] integerValue];
             if (currentSize >= downloadModel.totalSize) {
                 //删除该条数据
@@ -148,20 +149,6 @@
     return list;
 }
 
-+ (BOOL)isFileExist:(NSString *)fileName {
-    NSString*filePath =[self cacheDocumentPathWithFileName:fileName];
-    NSLog(@"+++filePath : %@", filePath);
-    BOOL fileExists=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    return fileExists;
-}
-
-+ (NSString *)cacheDocumentPathWithFileName:(NSString *)fileName {
-    NSArray* paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *path = paths.firstObject;
-    fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    NSString* filePath =[path stringByAppendingPathComponent:fileName];
-    return filePath;
-}
 
 @end
 

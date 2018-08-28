@@ -9,11 +9,17 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, MHDownloadStatus) {
+    /** 等待下载 */
     MHDownloadStatusDownloadWait,
+    /** 暂停下载 */
     MHDownloadStatusDownloadSuspend,
+    /** 正在下载 */
     MHDownloadStatusDownloading,
+    /** 下载完成 */
     MHDownloadStatusDownloadComplete,
+    /** 下载失败 */
     MHDownloadStatusDownloadFail,
+    /** 取消下载 */
     MHDownloadStatusDownloadCancel
 };
 

@@ -83,10 +83,11 @@
 }
 
 - (BOOL)updateDownloadFileTotalSizeWithFileName:(NSString *)fileName
+                                 downloadStatus:(MHDownloadStatus)downloadStatus
                                   fileTotalSize:(NSInteger)fileTotalSize {
     __block BOOL result = NO;
     [[MHFileDatabase shareInstance].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        result = [db executeUpdateWithFormat:@"update download_file set file_total_size = %ld where file_name = %@;", (long)fileTotalSize, fileName];
+        result = [db executeUpdateWithFormat:@"update download_file set file_total_size = %ld,download_status = %ld where file_name = %@;", (long)fileTotalSize, downloadStatus, fileName];
     }];
     return result;
 }

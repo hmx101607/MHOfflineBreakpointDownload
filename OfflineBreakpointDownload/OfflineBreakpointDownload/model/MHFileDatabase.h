@@ -47,9 +47,11 @@
 
  @param fileName 文件名称
  @param fileTotalSize 文件总大小
+ @param downloadStatus 状态
  @return 返回是否成功
  */
 - (BOOL)updateDownloadFileTotalSizeWithFileName:(NSString *)fileName
+                                 downloadStatus:(MHDownloadStatus)downloadStatus
                                   fileTotalSize:(NSInteger)fileTotalSize;
 
 

@@ -50,16 +50,17 @@
         return;
     }
     //如果数据库中存在该文件，则表明仅仅只是由暂停或失败状态，重启下载（暂停 -> 正在下载）
-    MHDownloadModel *model = [[MHFileDatabase shareInstance] queryModelWitFileName:fileUrl.lastPathComponent];
-    if (model) {
+    downloadModel = [[MHFileDatabase shareInstance] queryModelWitFileName:fileUrl.lastPathComponent];
+    if (downloadModel) {
         //更新下载文件的状态
         [[MHFileDatabase shareInstance] updateDownloadStatusWithFileName:fileUrl.lastPathComponent downloadStatus:MHDownloadStatusDownloading];
     } else {
         //插入数据，记录下载文件
         [[MHFileDatabase shareInstance] insertFileWithFileName:fileUrl.lastPathComponent filePath:fileUrl fileTotalSize:0];
+        downloadModel = [MHDownloadModel new];
+        downloadModel.filePath = fileUrl;
     }
-    downloadModel = [MHDownloadModel new];
-    downloadModel.filePath = fileUrl;
+    
     [self.downloadTasks addObject:downloadModel];
     [self startDownLoadWithUrl:fileUrl];
 }
@@ -178,8 +179,8 @@ didReceiveResponse:(NSURLResponse *)response
     downloadModel.handle = [NSFileHandle fileHandleForWritingAtPath:[self getFilePathWithUrl:url]];
     [downloadModel.handle seekToEndOfFile]; // 要插入的数据移动到最后
     
-    //更新下载文件的总大小
-    [[MHFileDatabase shareInstance] updateDownloadFileTotalSizeWithFileName:url.lastPathComponent fileTotalSize:downloadModel.totalSize];
+    //更新下载文件的总大小与及状态
+    [[MHFileDatabase shareInstance] updateDownloadFileTotalSizeWithFileName:url.lastPathComponent downloadStatus:MHDownloadStatusDownloading fileTotalSize:downloadModel.totalSize];
     
     completionHandler (NSURLSessionResponseAllow);
 }

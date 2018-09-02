@@ -1,8 +1,19 @@
 ## NSURLSessionDataTask与NSOperationQueue实现多文件断点下载（任意时刻终止进程，重启应用，自动重启下载）
 ### 知识要点
-> 1. NSURLSession网络操作
-> 2. NSOperationQueue线程队列的管理
+> 1. NSOperationQueue线程队列的管理
+> 2. NSURLSession网络操作
 > 3. FMDB数据库操作
+ 
+### NSOperationQueue
++ 苹果提供的一套多线程解决方案，基于GCD更高一层的封装，完全面向对象。  
++ 我们使用NSOperation配合NSOperationQueue来实现多线程，执行异步任务。
+
+	>  NSOperation 实现多线程的使用步骤分为三步：   
+	1.创建操作：先将需要执行的操作封装到一个 NSOperation 对象中。  
+	2.创建队列：创建 NSOperationQueue 对象。  
+	3.将操作加入到队列中：将 NSOperation 对象添加到 NSOperationQueue 对象中。
+	
++ NSOperation是个抽象类，不能用来封装操作，NSOperation的两个子类NSInvocationOperation与NSBlockOperation以及自定义继承自NSOperation的子类。由于我们需要根据**NSURLSessionTask**的状态来控制队列的执行，所以只能自定义NSOperation，并在子类内部通用KVO的方式来监听NSURLSessionTask状态
 
 ### NSURLSession
 > NSURLSession是iOS7中用于替换NSURLConnection而新增的接口，用于网络相关的操 作，包括数据请求，上传，下载，处理认证等工具，能处理http协议中的所用事情。但NSURLSession并不直接工作，而是由NSURLSessionTask完成，NSURLSessionTask 有三个子类：数据请求**NSURLSessionDataTask**，上传**NSURLSessionUploadTask**，下载**NSURLSessionDownloadTask**，可以使用block,delegate来进行初始化，当然使用NSURLSessionDataTask来进行上传和下载工作也是可行的。

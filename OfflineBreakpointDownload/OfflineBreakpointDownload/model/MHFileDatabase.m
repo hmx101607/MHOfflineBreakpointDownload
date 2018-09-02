@@ -121,11 +121,12 @@
     __block FMResultSet *results;
     __block NSMutableArray *list = [NSMutableArray array];
     [[MHFileDatabase shareInstance].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        NSMutableString *sql = [[NSMutableString alloc] init];
+        [sql appendString:@"select * from download_file"];
         if (fileName && fileName.length > 0) {
-            results = [db executeQueryWithFormat:@"select * from download_file where file_name=%@;", fileName];
-        } else {
-            results = [db executeQueryWithFormat:@"select * from download_file"];
+           [sql appendFormat: @" where file_name=%@;", fileName];
         }
+        results = [db executeQuery:sql];
     }];
     while ([results  next]) {
         MHDownloadModel *downloadModel = [MHDownloadModel new];

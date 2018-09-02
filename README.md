@@ -1,4 +1,4 @@
-# NSURLSessionDataTask与NSOperationQueue实现多文件断点下载（任意时刻终止进程，重启应用，自动重启下载）
+## NSURLSessionDataTask与NSOperationQueue实现多文件断点下载（任意时刻终止进程，重启应用，自动重启下载）
 ### 知识要点
 > 1. NSURLSession网络操作
 > 2. NSOperationQueue线程队列的管理
@@ -32,8 +32,8 @@
  
 #### 添加下载任务到队列中
 > 这里分两块：第一次新增，以及由暂停或失败状态重启
-> 
-> ~~~
+ 
+~~~
 - (void)addDownloadQueue:(NSString *)fileUrl {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:fileUrl];
     if (downloadModel) {
@@ -57,8 +57,8 @@
 
 #### 启动下载任务
 > 此时并不一定马上下载，下载的启动由NSOperationQueue控制，默认最大的下载并发数为3。
-> 
-> ~~~
+ 
+~~~
 - (void)startDownLoadWithUrl:(NSString *)url {
     MHDownloadModel *downloadModel = [self fetchDownloadModelWithFileUrl:url];
     downloadModel.downloadStatus = MHDownloadStatusDownloadWait;
@@ -80,8 +80,8 @@
 > 1.设置url  
 > 2.设置request，设置请求头、请求体  
 > 3.发送请求
->
->~~~
+
+~~~
 - (NSURLSessionDataTask *)downloadDataTaskWithUrl:(NSString *)url{
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:[self getFilePathWithUrl:url] error:nil];
@@ -99,8 +99,8 @@
 #### 实现代理NSURLSessionDataDelegate
 > +  开始下载：获取目标	文件的大小，创建沙盒文件
  必须调用 completionHandler (NSURLSessionResponseAllow)
-> 
-> ~~~
+ 
+~~~
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -108,43 +108,17 @@ didReceiveResponse:(NSURLResponse *)response
 ~~~
 
 > + 获取下载进度，并将二进制数据写入沙盒
-> 
-> ~~~
+ 
+~~~
  - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data
 ~~~
 
 > + 下载完成或出错
-> 
-> ~~~
+ 
+~~~
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 ~~~
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

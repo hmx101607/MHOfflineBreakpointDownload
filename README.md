@@ -18,6 +18,7 @@
 	+ 优点：直接将二进制数据写入可以永久存储的沙盒文件（NSDocumentDirectory,NSLibraryDirectory）中
 	+ 缺点：需要自定义NSFileHandle，然后将下载的数据拼接存储在本地
 + 对比：通过两者的优缺点对比，NSURLSessionDownloadTask如果需要实现在进程终止后，能自启下载，就必须不断的将tmp的二进制文件拷贝到NSDocumentDirectory或NSLibraryDirectory中，以及不断获取resumeData值，这样会造成很大的资源的浪费以及内存的开销。使用NSURLSessionDataTask避免了二进制文件的拷贝，将基础的数据在开始下载是就存入到数据库中，从而做到任意时刻终止进程，重启应用，都能获取到资源路径，资源大小，下载的状态，保持应用终止前的状态或自动重启下载。
++ 基于对比，最终我选择使用NSURLSessionDataTask来实现断点下载。
 
 ### 思路
 + 1.准备下载：将下载任务添加到下载任务队列中，并将文件名称，资源路径，下载状态（等待下载）存储到数据库中

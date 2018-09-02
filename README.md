@@ -1,4 +1,7 @@
 ## NSURLSessionDataTask与NSOperationQueue实现多文件断点下载（任意时刻终止进程，重启应用，自动重启下载）
+### 效果展示
+![](http://7qnbrb.com1.z0.glb.clouddn.com/download.gif)
+
 ### 知识要点
 > 1. NSOperationQueue线程队列的管理
 > 2. NSURLSession网络操作

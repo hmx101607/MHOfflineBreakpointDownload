@@ -11,8 +11,8 @@
 
 ### NSURLSessionDataTask与NSURLSessionDownloadTask方案选择的考虑
 + NSURLSessionDownloadTask
- + 优点：使用cancelByProducingResumeData取消下载时，能获取到当前下载文件的情况的resumeData，包含下载了多少，总大小等，以及能配置后台下载功能。
- + 缺点：NSURLSessionDownloadTask下载下来的二进制文件会先存储在tmp临时文件（该文件夹下的内容随时可能清空）中，在下载结束后，才将文件移动到指定的沙盒文件中。
+ 	+ 优点：使用cancelByProducingResumeData取消下载时，能获取到当前下载文件的情况的resumeData，包含下载了多少，总大小等，以及能配置后台下载功能。
+ 	+ 缺点：NSURLSessionDownloadTask下载下来的二进制文件会先存储在tmp临时文件（该文件夹下的内容随时可能清空）中，在下载结束后，才将文件移动到指定的沙盒文件中。
  
 + NSURLSessionDataTask
 	+ 优点：直接将二进制数据写入可以永久存储的沙盒文件（NSDocumentDirectory,NSLibraryDirectory）中
